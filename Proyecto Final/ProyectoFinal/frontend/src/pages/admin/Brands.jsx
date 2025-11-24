@@ -13,21 +13,23 @@ export default function Brands() {
         nombre: '',
         descripcion: '',
         pais: ''
-    });
+    });
+
     const fetchBrands = async () => {
         try {
-            setLoading(true);
+            setLoading(true);
+
             const staticBrands = [
-                { id: 1, nombre: 'Bosch', descripcion: 'TecnologÃ­a automotriz alemana', pais: 'Alemania', productos: 15 },
-                { id: 2, nombre: 'NGK', descripcion: 'Especialista en bujÃ­as y componentes', pais: 'JapÃ³n', productos: 8 },
+                { id: 1, nombre: 'Bosch', descripcion: 'Tecnología automotriz alemana', pais: 'Alemania', productos: 15 },
+                { id: 2, nombre: 'NGK', descripcion: 'Especialista en bujías y componentes', pais: 'Japón', productos: 8 },
                 { id: 3, nombre: 'Mann Filter', descripcion: 'Filtros de alta calidad', pais: 'Alemania', productos: 6 },
                 { id: 4, nombre: 'Castrol', descripcion: 'Aceites y lubricantes premium', pais: 'Reino Unido', productos: 5 },
-                { id: 5, nombre: 'Monroe', descripcion: 'Sistemas de suspensiÃ³n', pais: 'Estados Unidos', productos: 4 },
+                { id: 5, nombre: 'Monroe', descripcion: 'Sistemas de suspensión', pais: 'Estados Unidos', productos: 4 },
                 { id: 6, nombre: 'Brembo', descripcion: 'Sistemas de frenado deportivo', pais: 'Italia', productos: 2 }
             ];
             setBrands(staticBrands);
         } catch (error) {
-            } finally {
+        } finally {
             setLoading(false);
         }
     };
@@ -39,27 +41,29 @@ export default function Brands() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            if (editingBrand) {
-                } else {
-                }
+            if (editingBrand) {
+
+            } else {
+
+            }
             
             setShowForm(false);
             setEditingBrand(null);
             setFormData({ nombre: '', descripcion: '', pais: '' });
             fetchBrands();
         } catch (error) {
-            }
+        }
     };
 
     const deleteBrand = async (id) => {
-        if (!confirm("Â¿EstÃ¡s seguro de que quieres eliminar esta marca?")) {
+        if (!confirm("¿Estás seguro de que quieres eliminar esta marca?")) {
             return;
         }
         
         try {
             fetchBrands();
         } catch (error) {
-            }
+        }
     };
 
     const editBrand = (brand) => {
@@ -86,7 +90,7 @@ export default function Brands() {
     return (
         <div className="admin-container">
             <div className="admin-header">
-                <h1>ðŸ­ GestiÃ³n de Marcas</h1>
+                <h1>🏭 Gestión de Marcas</h1>
                 <div className="header-buttons">
                     <button 
                         className="btn-primary"
@@ -96,13 +100,13 @@ export default function Brands() {
                             setShowForm(!showForm);
                         }}
                     >
-                        {showForm ? 'âŒ Cancelar' : 'âž• Nueva Marca'}
+                        {showForm ? '❌ Cancelar' : '➕ Nueva Marca'}
                     </button>
                     <button 
                         className="btn-secondary"
                         onClick={() => navigate('/admin/dashboard')}
                     >
-                        â† Volver al Dashboard
+                        ← Volver al Dashboard
                     </button>
                 </div>
             </div>
@@ -125,7 +129,7 @@ export default function Brands() {
                         </div>
 
                         <div className="form-group">
-                            <label htmlFor="pais">PaÃ­s de Origen</label>
+                            <label htmlFor="pais">País de Origen</label>
                             <input
                                 type="text"
                                 id="pais"
@@ -136,13 +140,13 @@ export default function Brands() {
                         </div>
 
                         <div className="form-group">
-                            <label htmlFor="descripcion">DescripciÃ³n</label>
+                            <label htmlFor="descripcion">Descripción</label>
                             <textarea
                                 id="descripcion"
                                 value={formData.descripcion}
                                 onChange={(e) => setFormData({...formData, descripcion: e.target.value})}
                                 rows="3"
-                                placeholder="DescripciÃ³n de la marca..."
+                                placeholder="Descripción de la marca..."
                             />
                         </div>
 
@@ -164,8 +168,8 @@ export default function Brands() {
                         <tr>
                             <th>ID</th>
                             <th>Nombre</th>
-                            <th>PaÃ­s</th>
-                            <th>DescripciÃ³n</th>
+                            <th>País</th>
+                            <th>Descripción</th>
                             <th>Productos</th>
                             <th>Acciones</th>
                         </tr>
@@ -191,14 +195,14 @@ export default function Brands() {
                                             onClick={() => editBrand(brand)}
                                             title="Editar marca"
                                         >
-                                            âœï¸
+                                            ✏️
                                         </button>
                                         <button 
                                             className="btn-action delete"
                                             onClick={() => deleteBrand(brand.id)}
                                             title="Eliminar marca"
                                         >
-                                            ðŸ—‘ï¸
+                                            🗑️
                                         </button>
                                     </div>
                                 </td>
@@ -223,4 +227,3 @@ export default function Brands() {
         </div>
     );
 }
-

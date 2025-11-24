@@ -24,23 +24,23 @@ export default function Navbar() {
         <nav className="nav-bar">
             <div className="nav-brand">
                 <Link to="/">
-                    <h2>ðŸª RepuestosAuto</h2>
+                    <h2>🛺 RepuestosAuto</h2>
                 </Link>
             </div>
             <div className="nav-links">
-                <Link to="/catalogo">CatÃ¡logo</Link>
+                <Link to="/catalogo">Catálogo</Link>
                 
                 {user ? (
                     <>
                         <span>Hola, {user.nombre}!</span>
                         <Link to="/perfil">Mi Perfil</Link>
                         <button onClick={handleLogout} className="btn-logout">
-                            Cerrar SesiÃ³n
+                            Cerrar Sesión
                         </button>
                     </>
                 ) : (
                     <>
-                        <Link to="/auth/login">Iniciar SesiÃ³n</Link>
+                        <Link to="/auth/login">Iniciar Sesión</Link>
                         <Link to="/auth/register" className="btn-primary">
                             Registrarse
                         </Link>

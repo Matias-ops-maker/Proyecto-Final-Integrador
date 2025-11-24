@@ -15,13 +15,16 @@ export default function UserNavbar() {
             } else {
                 setUser(null);
             }
-        };
-        checkAuth();
+        };
+
+        checkAuth();
+
         const handleStorageChange = () => {
             checkAuth();
         };
 
-        window.addEventListener('storage', handleStorageChange);
+        window.addEventListener('storage', handleStorageChange);
+
         const interval = setInterval(checkAuth, 1000);
 
         return () => {
@@ -30,11 +33,13 @@ export default function UserNavbar() {
         };
     }, []);
 
-    useEffect(() => {
+    useEffect(() => {
+
         const carritoGuardado = localStorage.getItem('carrito');
         if (carritoGuardado) {
             setCarrito(JSON.parse(carritoGuardado));
-        }
+        }
+
         const handleCarritoChange = () => {
             const carritoActualizado = localStorage.getItem('carrito');
             if (carritoActualizado) {
@@ -90,7 +95,7 @@ export default function UserNavbar() {
                             fontWeight: 'bold'
                         }}
                     >
-                        ðŸª RepuestosAuto
+                        🛺 RepuestosAuto
                     </Link>
                 </div>
                 
@@ -111,7 +116,7 @@ export default function UserNavbar() {
                         onMouseOver={(e) => e.target.style.background = '#374151'}
                         onMouseOut={(e) => e.target.style.background = 'transparent'}
                     >
-                        ðŸ›ï¸ CatÃ¡logo
+                        🛍️ Catálogo
                     </Link>
                     
                     <Link 
@@ -128,7 +133,7 @@ export default function UserNavbar() {
                             transition: 'background 0.3s'
                         }}
                     >
-                        ðŸ›’ Carrito ({cantidadItems})
+                        🛒 Carrito ({cantidadItems})
                     </Link>
                     
                     {user ? (
@@ -146,7 +151,7 @@ export default function UserNavbar() {
                                     background: '#3B82F6'
                                 }}
                             >
-                                ðŸ‘¤ Mi Perfil
+                                🙍 Mi Perfil
                             </Link>
                             {user.rol === 'admin' && (
                                 <Link 
@@ -159,7 +164,7 @@ export default function UserNavbar() {
                                         background: '#8B5CF6'
                                     }}
                                 >
-                                    ðŸ‘‘ Admin
+                                    🧑‍💼 Admin
                                 </Link>
                             )}
                             <button 
@@ -173,7 +178,7 @@ export default function UserNavbar() {
                                     cursor: 'pointer'
                                 }}
                             >
-                                ðŸšª Salir
+                                🔒 Salir
                             </button>
                         </>
                     ) : (
@@ -188,7 +193,7 @@ export default function UserNavbar() {
                                     background: '#3B82F6'
                                 }}
                             >
-                                ðŸ”‘ Iniciar SesiÃ³n
+                                🔑 Iniciar Sesión
                             </Link>
                             <Link 
                                 to="/auth/register"
@@ -200,7 +205,7 @@ export default function UserNavbar() {
                                     background: '#10B981'
                                 }}
                             >
-                                ðŸ“ Registrarse
+                                📝 Registrarse
                             </Link>
                         </>
                     )}
@@ -209,4 +214,3 @@ export default function UserNavbar() {
         </nav>
     );
 }
-

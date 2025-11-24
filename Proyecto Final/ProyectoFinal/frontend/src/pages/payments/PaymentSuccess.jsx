@@ -12,15 +12,13 @@ const PaymentSuccess = () => {
     const verifyPayment = async () => {
       try {
         const paymentId = searchParams.get('payment_id');
-        const status = searchParams.get('status');
-        const externalReference = searchParams.get('external_reference');
 
         if (paymentId) {
           const response = await api.get(`/payments/status/${paymentId}`);
           setPaymentInfo(response.data);
-        }
+        }
+
         localStorage.removeItem('carrito');
-        
         setLoading(false);
       } catch (error) {
         setLoading(false);
@@ -51,15 +49,21 @@ const PaymentSuccess = () => {
     <div className="payment-result-container success">
       <div className="payment-result-card">
         <div className="success-icon">
-          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http:
+          <svg 
+            width="64" 
+            height="64" 
+            viewBox="0 0 24 24" 
+            fill="none" 
+            xmlns="http://www.w3.org/2000/svg"
+          >
             <circle cx="12" cy="12" r="11" fill="#10b981"/>
             <path d="m9 12 2 2 4-4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
         </div>
-        
-        <h1>Â¡Pago exitoso!</h1>
+
+        <h1>¡Pago exitoso!</h1>
         <p className="success-message">
-          Tu pago se procesÃ³ correctamente. RecibirÃ¡s un email de confirmaciÃ³n con los detalles de tu pedido.
+          Tu pago se procesó correctamente. Recibirás un email de confirmación con los detalles de tu pedido.
         </p>
 
         {paymentInfo && (
@@ -74,7 +78,7 @@ const PaymentSuccess = () => {
               <span className="status-approved">{paymentInfo.status}</span>
             </div>
             <div className="detail-row">
-              <span>MÃ©todo de pago:</span>
+              <span>Método de pago:</span>
               <span>{paymentInfo.payment_method || 'MercadoPago'}</span>
             </div>
             <div className="detail-row">
@@ -104,4 +108,3 @@ const PaymentSuccess = () => {
 };
 
 export default PaymentSuccess;
-

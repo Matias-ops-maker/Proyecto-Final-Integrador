@@ -7,7 +7,7 @@ export default function Products() {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
-    const [filterCategory, setFilterCategory] = useState("");
+       const [filterCategory, setFilterCategory] = useState("");
     const [sortBy, setSortBy] = useState("name");
     const navigate = useNavigate();
 
@@ -15,9 +15,9 @@ export default function Products() {
         { id: 1, name: 'Filtros' },
         { id: 2, name: 'Frenos' },
         { id: 3, name: 'Aceites' },
-        { id: 4, name: 'Sistema ElÃ©ctrico' },
-        { id: 5, name: 'SuspensiÃ³n' },
-        { id: 6, name: 'TransmisiÃ³n' }
+        { id: 4, name: 'Sistema Eléctrico' },
+        { id: 5, name: 'Suspensión' },
+        { id: 6, name: 'Transmisión' }
     ];
 
     const fetchProducts = async () => {
@@ -39,7 +39,7 @@ export default function Products() {
     }, []);
 
     const deleteProduct = async (id) => {
-        if (!confirm("Â¿EstÃ¡s seguro de que quieres eliminar este producto?")) {
+        if (!confirm("¿Estás seguro de que quieres eliminar este producto?")) {
             return;
         }
         
@@ -53,7 +53,7 @@ export default function Products() {
 
     const getCategoryName = (categoryId) => {
         const category = categories.find(cat => cat.id === categoryId);
-        return category ? category.name : 'Sin categorÃ­a';
+        return category ? category.name : 'Sin categoría';
     };
 
     const getFilteredProducts = () => {
@@ -112,21 +112,20 @@ export default function Products() {
     return (
         <div className="admin-container">
             <div className="admin-header">
-                <h1>ðŸ“¦ GestiÃ³n de Productos</h1>
+                <h1>📦 Gestión de Productos</h1>
                 <button 
                     className="btn-primary"
                     onClick={() => navigate('/admin/products/new')}
                 >
-                    âž• Nuevo Producto
+                    ➕ Nuevo Producto
                 </button>
             </div>
 
-            {}
             <div className="admin-controls">
                 <div className="search-container">
                     <input
                         type="text"
-                        placeholder="ðŸ” Buscar productos por nombre, SKU o marca..."
+                        placeholder="🔍 Buscar productos por nombre, SKU o marca..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         className="search-input"
@@ -139,7 +138,7 @@ export default function Products() {
                         onChange={(e) => setFilterCategory(e.target.value)}
                         className="filter-select"
                     >
-                        <option value="">Todas las categorÃ­as</option>
+                        <option value="">Todas las categorías</option>
                         {categories.map(cat => (
                             <option key={cat.id} value={cat.id}>
                                 {cat.name}
@@ -163,14 +162,13 @@ export default function Products() {
                 </div>
             </div>
 
-            {}
             <div className="table-container">
                 <table className="products-table">
                     <thead>
                         <tr>
                             <th>Imagen</th>
                             <th>Nombre</th>
-                            <th>CategorÃ­a</th>
+                            <th>Categoría</th>
                             <th>Precio</th>
                             <th>Stock</th>
                             <th>Estado</th>
@@ -181,14 +179,14 @@ export default function Products() {
                         {filteredProducts.length === 0 ? (
                             <tr>
                                 <td colSpan="7" className="no-data">
-                                    ðŸ“¦ No se encontraron productos
+                                    📦 No se encontraron productos
                                     {searchTerm && (
                                         <div>
                                             <button 
                                                 className="btn-link"
                                                 onClick={() => setSearchTerm('')}
                                             >
-                                                Limpiar bÃºsqueda
+                                                Limpiar búsqueda
                                             </button>
                                         </div>
                                     )}
@@ -229,7 +227,7 @@ export default function Products() {
                                     </td>
                                     <td className="status-cell">
                                         <span className={`status-badge ${product.stock > 0 ? 'active' : 'inactive'}`}>
-                                            {product.stock > 0 ? 'âœ… Disponible' : 'âŒ Agotado'}
+                                            {product.stock > 0 ? '✅ Disponible' : '❌ Agotado'}
                                         </span>
                                     </td>
                                     <td className="actions-cell">
@@ -239,14 +237,14 @@ export default function Products() {
                                                 onClick={() => navigate(`/admin/products/edit/${product.id}`)}
                                                 title="Editar producto"
                                             >
-                                                âœï¸
+                                                ✏️
                                             </button>
                                             <button 
                                                 className="btn-action delete"
                                                 onClick={() => deleteProduct(product.id)}
                                                 title="Eliminar producto"
                                             >
-                                                ðŸ—‘ï¸
+                                                🗑️
                                             </button>
                                         </div>
                                     </td>
@@ -257,7 +255,6 @@ export default function Products() {
                 </table>
             </div>
 
-            {}
             <div className="admin-stats-footer">
                 <div className="stat-card">
                     <span className="stat-number">{products.length}</span>
@@ -285,4 +282,3 @@ export default function Products() {
         </div>
     );
 }
-

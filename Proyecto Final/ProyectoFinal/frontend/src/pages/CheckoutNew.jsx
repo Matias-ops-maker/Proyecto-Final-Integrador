@@ -61,7 +61,7 @@ const CheckoutNew = () => {
     
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(checkoutData.email)) {
-      setError('El email no es vÃ¡lido');
+      setError('El email no es válido');
       return false;
     }
     
@@ -76,7 +76,7 @@ const CheckoutNew = () => {
     }
 
     if (cart.length === 0) {
-      setError('El carrito estÃ¡ vacÃ­o');
+      setError('El carrito está vacío');
       return;
     }
 
@@ -131,7 +131,7 @@ const CheckoutNew = () => {
         if (initPoint) {
           window.location.href = initPoint;
         } else {
-          throw new Error('No se recibiÃ³ la URL de pago');
+          throw new Error('No se recibió la URL de pago');
         }
       } else {
         throw new Error(response.data.message || 'Error al crear la preferencia de pago');
@@ -163,7 +163,7 @@ const CheckoutNew = () => {
         <div className="checkout-content">
           <h2>Checkout</h2>
           <div className="empty-cart">
-            <p>Tu carrito estÃ¡ vacÃ­o</p>
+            <p>Tu carrito está vacío</p>
             <button 
               onClick={() => window.location.href = '/productos'}
               className="btn btn-primary"
@@ -188,7 +188,7 @@ const CheckoutNew = () => {
         )}
 
         <div className="checkout-sections">
-          {}
+
           <div className="order-summary">
             <h3>Resumen del Pedido</h3>
             <div className="cart-items">
@@ -211,7 +211,6 @@ const CheckoutNew = () => {
             </div>
           </div>
 
-          {}
           <div className="buyer-data">
             <h3>Datos del Comprador</h3>
             <form className="checkout-form">
@@ -253,7 +252,7 @@ const CheckoutNew = () => {
                   />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="telefono">TelÃ©fono *</label>
+                  <label htmlFor="telefono">Teléfono *</label>
                   <input
                     type="tel"
                     id="telefono"
@@ -278,7 +277,7 @@ const CheckoutNew = () => {
                   />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="codigoPostal">CÃ³digo Postal</label>
+                  <label htmlFor="codigoPostal">Código Postal</label>
                   <input
                     type="text"
                     id="codigoPostal"
@@ -290,7 +289,7 @@ const CheckoutNew = () => {
               </div>
 
               <div className="form-group">
-                <label htmlFor="direccion">DirecciÃ³n *</label>
+                <label htmlFor="direccion">Dirección *</label>
                 <input
                   type="text"
                   id="direccion"
@@ -328,7 +327,6 @@ const CheckoutNew = () => {
           </div>
         </div>
 
-        {}
         <div className="payment-section">
           <button
             onClick={handleCheckout}
@@ -339,9 +337,9 @@ const CheckoutNew = () => {
           </button>
           
           <div className="payment-info">
-            <p>âœ“ Pago seguro con MercadoPago</p>
-            <p>âœ“ Aceptamos todas las tarjetas</p>
-            <p>âœ“ Pago en efectivo en Rapipago y Pago FÃ¡cil</p>
+            <p>✔ Pago seguro con MercadoPago</p>
+            <p>✔ Aceptamos todas las tarjetas</p>
+            <p>✔ Pago en efectivo en Rapipago y Pago Fácil</p>
           </div>
         </div>
       </div>
@@ -350,5 +348,3 @@ const CheckoutNew = () => {
 };
 
 export default CheckoutNew;
-
-

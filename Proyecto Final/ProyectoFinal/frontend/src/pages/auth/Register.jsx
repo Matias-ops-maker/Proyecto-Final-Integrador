@@ -28,21 +28,23 @@ export default function Register() {
     e.preventDefault();
     setLoading(true);
     setError('');
-    setSuccess('');
+    setSuccess('');
+
     if (formData.password !== formData.confirmPassword) {
-      setError('Las contraseÃ±as no coinciden');
+      setError('Las contraseñas no coinciden');
       setLoading(false);
       return;
     }
 
     if (formData.password.length < 6) {
-      setError('La contraseÃ±a debe tener al menos 6 caracteres');
+      setError('La contraseña debe tener al menos 6 caracteres');
       setLoading(false);
       return;
     }
 
     try {
-      const { confirmPassword, ...dataToSend } = formData;
+      const { confirmPassword, ...dataToSend } = formData;
+
       const requestData = {
         ...dataToSend,
         nombre: dataToSend.name
@@ -52,7 +54,7 @@ export default function Register() {
       const response = await api.post('/auth/register', requestData);
 
       if (response.data) {
-        setSuccess('Â¡Registro exitoso! Redirigiendo al login...');
+        setSuccess('¡Registro exitoso! Redirigiendo al login...');
         setTimeout(() => {
           navigate('/auth/login');
         }, 2000);
@@ -63,7 +65,7 @@ export default function Register() {
       if (err.response && err.response.data) {
         setError(err.response.data.error || err.response.data.message || 'Error al registrarse');
       } else {
-        setError('Error de conexiÃ³n. Verifica que el servidor estÃ© ejecutÃ¡ndose.');
+        setError('Error de conexión. Verifica que el servidor esté ejecutándose.');
       }
     } finally {
       setLoading(false);
@@ -74,10 +76,10 @@ export default function Register() {
     <div className="auth-container">
       <div className="auth-card">
         <div className="auth-header">
-          <Link to="/" className="back-link">â† Volver al inicio</Link>
-          <h1>ðŸª RepuestosAuto</h1>
+          <Link to="/" className="back-link">← Volver al inicio</Link>
+          <h1>🏪 RepuestosAuto</h1>
           <h2>Crear Cuenta</h2>
-          <p>Ãšnete a nuestra comunidad de compradores y vendedores</p>
+          <p>Únete a nuestra comunidad de compradores y vendedores</p>
         </div>
 
         <form onSubmit={handleSubmit} className="auth-form">
@@ -85,7 +87,7 @@ export default function Register() {
           {success && <div className="success-message">{success}</div>}
           
           <div className="form-group">
-            <label htmlFor="name">ðŸ‘¤ Nombre Completo</label>
+            <label htmlFor="name">👤 Nombre Completo</label>
             <input
               type="text"
               id="name"
@@ -98,7 +100,7 @@ export default function Register() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="email">ðŸ“§ Email</label>
+            <label htmlFor="email">📧 Email</label>
             <input
               type="email"
               id="email"
@@ -111,7 +113,7 @@ export default function Register() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="phone">ðŸ“± TelÃ©fono</label>
+            <label htmlFor="phone">📱 Teléfono</label>
             <input
               type="tel"
               id="phone"
@@ -124,7 +126,7 @@ export default function Register() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="role">ðŸ‘¥ Tipo de Cuenta</label>
+            <label htmlFor="role">🧑‍💼 Tipo de Cuenta</label>
             <select
               id="role"
               name="role"
@@ -132,33 +134,33 @@ export default function Register() {
               onChange={handleChange}
               required
             >
-              <option value="user">ðŸ›’ Comprador</option>
-              <option value="seller">ðŸª Vendedor</option>
+              <option value="user">🛒 Comprador</option>
+              <option value="seller">🏪 Vendedor</option>
             </select>
           </div>
 
           <div className="form-group">
-            <label htmlFor="password">ðŸ”’ ContraseÃ±a</label>
+            <label htmlFor="password">🔒 Contraseña</label>
             <input
               type="password"
               id="password"
               name="password"
               value={formData.password}
               onChange={handleChange}
-              placeholder="MÃ­nimo 6 caracteres"
+              placeholder="Mínimo 6 caracteres"
               required
             />
           </div>
 
           <div className="form-group">
-            <label htmlFor="confirmPassword">ðŸ”’ Confirmar ContraseÃ±a</label>
+            <label htmlFor="confirmPassword">🔒 Confirmar Contraseña</label>
             <input
               type="password"
               id="confirmPassword"
               name="confirmPassword"
               value={formData.confirmPassword}
               onChange={handleChange}
-              placeholder="Repite tu contraseÃ±a"
+              placeholder="Repite tu contraseña"
               required
             />
           </div>
@@ -168,26 +170,25 @@ export default function Register() {
             className="auth-button"
             disabled={loading}
           >
-            {loading ? 'â³ Creando cuenta...' : 'ðŸš€ Crear Cuenta'}
+            {loading ? '⏳ Creando cuenta...' : '🚀 Crear Cuenta'}
           </button>
         </form>
 
         <div className="auth-links">
-          <p>Â¿Ya tienes cuenta? <Link to="/auth/login">Inicia sesiÃ³n aquÃ­</Link></p>
+          <p>¿Ya tienes cuenta? <Link to="/auth/login">Inicia sesión aquí</Link></p>
         </div>
 
         <div className="features-list">
-          <h4>âœ¨ Beneficios de registrarte:</h4>
+          <h4>✨ Beneficios de registrarte:</h4>
           <ul>
-            <li>ðŸ›’ Carrito de compras persistente</li>
-            <li>ðŸ“¦ Seguimiento de pedidos</li>
-            <li>ðŸ’° Precios preferenciales</li>
-            <li>ðŸŽ¯ Ofertas personalizadas</li>
-            <li>ðŸ“± Soporte prioritario</li>
+            <li>🛒 Carrito de compras persistente</li>
+            <li>📦 Seguimiento de pedidos</li>
+            <li>💰 Precios preferenciales</li>
+            <li>🎯 Ofertas personalizadas</li>
+            <li>📱 Soporte prioritario</li>
           </ul>
         </div>
       </div>
     </div>
   );
 }
-

@@ -1,5 +1,5 @@
 ﻿import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { initMercadoPago } from '@mercadopago/sdk-react';
 import UserNavbar from '../../components/UserNavbar.jsx';
 import MercadoPagoCheckout from '../../components/MercadoPagoCheckout.jsx';
@@ -35,7 +35,6 @@ export default function Checkout() {
   const navigate = useNavigate();
 
   useEffect(() => {
-
     const carritoGuardado = localStorage.getItem('carrito');
     if (carritoGuardado) {
       setCarrito(JSON.parse(carritoGuardado));
@@ -110,10 +109,9 @@ export default function Checkout() {
     setCargando(true);
     
     try {
-
       const token = localStorage.getItem('token');
       if (!token) {
-        alert('Debes iniciar sesiÃ³n para realizar una compra');
+        alert('Debes iniciar sesión para realizar una compra');
         navigate('/auth/login');
         return;
       }
@@ -140,20 +138,17 @@ export default function Checkout() {
       const response = await api.post('/orders', orderData);
       
       if (response.data) {
-
         localStorage.removeItem('carrito');
         setCarrito([]);
-
         setPaso(4);
-        
-        }
+      }
     } catch (error) {
       let errorMessage = 'Error al procesar el pedido. Intenta nuevamente.';
       
       if (error.response?.data?.error) {
         errorMessage = error.response.data.error;
       } else if (error.response?.status === 401) {
-        errorMessage = 'Tu sesiÃ³n ha expirado. Por favor, inicia sesiÃ³n nuevamente.';
+        errorMessage = 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.';
         navigate('/auth/login');
         return;
       }
@@ -168,10 +163,10 @@ export default function Checkout() {
     return (
       <div className="catalogo-container">
         <div className="checkout-vacio">
-          <h2>ðŸ›’ Tu carrito estÃ¡ vacÃ­o</h2>
+          <h2>🛒 Tu carrito está vacío</h2>
           <p>Agrega algunos productos para continuar con la compra</p>
           <Link to="/catalogo" className="btn-continuar-comprando">
-            ðŸ›ï¸ Continuar Comprando
+            🛍️ Continuar Comprando
           </Link>
         </div>
       </div>
@@ -182,28 +177,29 @@ export default function Checkout() {
     <div className="catalogo-container">
       <header className="catalogo-header">
         <div className="header-content">
-          <Link to="/" className="logo">ðŸª RepuestosAuto</Link>
+          <Link to="/" className="logo">🏪 RepuestosAuto</Link>
           <div className="checkout-progress">
             <div className={`step ${paso >= 1 ? 'active' : ''}`}>1. Carrito</div>
             <div className={`step ${paso >= 2 ? 'active' : ''}`}>2. Datos</div>
             <div className={`step ${paso >= 3 ? 'active' : ''}`}>3. Pago</div>
-            <div className={`step ${paso >= 4 ? 'active' : ''}`}>4. ConfirmaciÃ³n</div>
+            <div className={`step ${paso >= 4 ? 'active' : ''}`}>4. Confirmación</div>
           </div>
           <div className="header-actions">
             {usuario ? (
-              <span>ðŸ‘¤ {usuario.firstName}</span>
+              <span>👤 {usuario.firstName}</span>
             ) : (
-              <Link to="/auth/login" className="auth-link">Iniciar SesiÃ³n</Link>
+              <Link to="/auth/login" className="auth-link">Iniciar Sesión</Link>
             )}
           </div>
         </div>
       </header>
 
       <div className="checkout-content">
-        {}
+
+        {/* PASO 1 */}
         {paso === 1 && (
           <div className="checkout-paso">
-            <h2>ðŸ›’ Revisar Carrito</h2>
+            <h2>🛒 Revisar Carrito</h2>
             <div className="checkout-grid">
               <div className="carrito-detalle">
                 {carrito.map(item => (
@@ -212,12 +208,12 @@ export default function Checkout() {
                       src={item.image} 
                       alt={item.name}
                       onError={(e) => {
-                        e.target.src = 'https:
+                        e.target.src = 'https://via.placeholder.com/150';
                       }}
                     />
                     <div className="item-info">
                       <h4>{item.name}</h4>
-                      <p className="item-marca">ðŸ­ {item.brand}</p>
+                      <p className="item-marca">🏭 {item.brand}</p>
                       <p className="item-precio">${item.price}</p>
                     </div>
                     <div className="item-controls">
@@ -232,20 +228,20 @@ export default function Checkout() {
                       className="eliminar-item"
                       onClick={() => eliminarDelCarrito(item.id)}
                     >
-                      ðŸ—‘ï¸
+                      🗑️
                     </button>
                   </div>
                 ))}
               </div>
               
               <div className="resumen-pedido">
-                <h3>ðŸ“Š Resumen del Pedido</h3>
+                <h3>📊 Resumen del Pedido</h3>
                 <div className="linea-resumen">
                   <span>Subtotal:</span>
                   <span>${calcularSubtotal().toFixed(2)}</span>
                 </div>
                 <div className="linea-resumen">
-                  <span>EnvÃ­o:</span>
+                  <span>Envío:</span>
                   <span>{calcularEnvio() === 0 ? 'GRATIS' : `$${calcularEnvio().toFixed(2)}`}</span>
                 </div>
                 <div className="linea-resumen">
@@ -262,17 +258,17 @@ export default function Checkout() {
                   onClick={() => setPaso(2)}
                   disabled={carrito.length === 0}
                 >
-                  âž¡ï¸ Continuar con Datos de Entrega
+                  ➡️ Continuar con Datos de Entrega
                 </button>
               </div>
             </div>
           </div>
         )}
 
-        {}
+        {/* PASO 2 */}
         {paso === 2 && (
           <div className="checkout-paso">
-            <h2>ðŸ“¦ Datos de Entrega</h2>
+            <h2>📦 Datos de Entrega</h2>
             <div className="checkout-grid">
               <div className="formulario-entrega">
                 <div className="form-row">
@@ -307,7 +303,7 @@ export default function Checkout() {
                     />
                   </div>
                   <div className="form-group">
-                    <label>TelÃ©fono *</label>
+                    <label>Teléfono *</label>
                     <input
                       type="tel"
                       value={datosEntrega.telefono}
@@ -318,7 +314,7 @@ export default function Checkout() {
                 </div>
                 
                 <div className="form-group">
-                  <label>DirecciÃ³n *</label>
+                  <label>Dirección *</label>
                   <input
                     type="text"
                     value={datosEntrega.direccion}
@@ -338,7 +334,7 @@ export default function Checkout() {
                     />
                   </div>
                   <div className="form-group">
-                    <label>CÃ³digo Postal *</label>
+                    <label>Código Postal *</label>
                     <input
                       type="text"
                       value={datosEntrega.codigoPostal}
@@ -363,20 +359,20 @@ export default function Checkout() {
                     className="btn-anterior"
                     onClick={() => setPaso(1)}
                   >
-                    â¬…ï¸ Volver al Carrito
+                    ⬅️ Volver al Carrito
                   </button>
                   <button 
                     className="btn-siguiente"
                     onClick={() => setPaso(3)}
                     disabled={!validarDatos()}
                   >
-                    âž¡ï¸ Continuar con Pago
+                    ➡️ Continuar con Pago
                   </button>
                 </div>
               </div>
               
               <div className="resumen-pedido">
-                <h3>ðŸ“Š Resumen del Pedido</h3>
+                <h3>📊 Resumen del Pedido</h3>
                 <div className="items-resumen">
                   {carrito.map(item => (
                     <div key={item.id} className="item-resumen">
@@ -394,10 +390,10 @@ export default function Checkout() {
           </div>
         )}
 
-        {}
+        {/* PASO 3 */}
         {paso === 3 && (
           <div className="checkout-paso">
-            <h2>ðŸ’³ MÃ©todo de Pago</h2>
+            <h2>💳 Método de Pago</h2>
             <div className="checkout-grid">
               <div className="formulario-pago">
                 <div className="metodos-pago">
@@ -410,7 +406,7 @@ export default function Checkout() {
                       checked={metodoPago === 'tarjeta'}
                       onChange={(e) => setMetodoPago(e.target.value)}
                     />
-                    <label htmlFor="tarjeta">ðŸ’³ Tarjeta de CrÃ©dito/DÃ©bito</label>
+                    <label htmlFor="tarjeta">💳 Tarjeta de Crédito/Débito</label>
                   </div>
                   <div className="metodo-option">
                     <input
@@ -421,7 +417,7 @@ export default function Checkout() {
                       checked={metodoPago === 'transferencia'}
                       onChange={(e) => setMetodoPago(e.target.value)}
                     />
-                    <label htmlFor="transferencia">ðŸ§ Transferencia Bancaria</label>
+                    <label htmlFor="transferencia">🏦 Transferencia Bancaria</label>
                   </div>
                   <div className="metodo-option">
                     <input
@@ -432,14 +428,14 @@ export default function Checkout() {
                       checked={metodoPago === 'efectivo'}
                       onChange={(e) => setMetodoPago(e.target.value)}
                     />
-                    <label htmlFor="efectivo">ðŸ’µ Efectivo contra entrega</label>
+                    <label htmlFor="efectivo">💵 Efectivo contra entrega</label>
                   </div>
                 </div>
 
                 {metodoPago === 'tarjeta' && (
                   <div className="form-tarjeta">
                     <div className="form-group">
-                      <label>NÃºmero de Tarjeta *</label>
+                      <label>Número de Tarjeta *</label>
                       <input
                         type="text"
                         value={datosPago.numeroTarjeta}
@@ -484,20 +480,20 @@ export default function Checkout() {
 
                 {metodoPago === 'transferencia' && (
                   <div className="info-transferencia">
-                    <h4>ðŸ“„ Datos para Transferencia</h4>
-                    <p><strong>Banco:</strong> Banco NaciÃ³n</p>
+                    <h4>📄 Datos para Transferencia</h4>
+                    <p><strong>Banco:</strong> Banco Nación</p>
                     <p><strong>CBU:</strong> 0110599520000001234567</p>
                     <p><strong>Alias:</strong> REPUESTOS.AUTO.MP</p>
                     <p><strong>Titular:</strong> RepuestosAuto S.A.</p>
-                    <p className="info-note">ðŸ’¡ El pedido se procesarÃ¡ al recibir el comprobante de pago</p>
+                    <p className="info-note">💡 El pedido se procesará al recibir el comprobante de pago</p>
                   </div>
                 )}
 
                 {metodoPago === 'efectivo' && (
                   <div className="info-efectivo">
-                    <h4>ðŸ’µ Pago en Efectivo</h4>
+                    <h4>💵 Pago en Efectivo</h4>
                     <p>Puedes pagar en efectivo al momento de la entrega.</p>
-                    <p className="info-note">ðŸ’¡ Recuerda tener el monto exacto disponible</p>
+                    <p className="info-note">💡 Recuerda tener el monto exacto disponible</p>
                   </div>
                 )}
                 
@@ -506,20 +502,20 @@ export default function Checkout() {
                     className="btn-anterior"
                     onClick={() => setPaso(2)}
                   >
-                    â¬…ï¸ Volver a Datos
+                    ⬅️ Volver a Datos
                   </button>
                   <button 
                     className="btn-finalizar"
                     onClick={procesarPedido}
                     disabled={!validarPago() || cargando}
                   >
-                    {cargando ? 'â³ Procesando...' : 'âœ… Finalizar Pedido'}
+                    {cargando ? '⏳ Procesando...' : '✅ Finalizar Pedido'}
                   </button>
                 </div>
               </div>
               
               <div className="resumen-pedido">
-                <h3>ðŸ“Š Resumen Final</h3>
+                <h3>📊 Resumen Final</h3>
                 <div className="items-resumen">
                   {carrito.map(item => (
                     <div key={item.id} className="item-resumen">
@@ -534,7 +530,7 @@ export default function Checkout() {
                     <span>${calcularSubtotal().toFixed(2)}</span>
                   </div>
                   <div className="linea-resumen">
-                    <span>EnvÃ­o:</span>
+                    <span>Envío:</span>
                     <span>{calcularEnvio() === 0 ? 'GRATIS' : `$${calcularEnvio().toFixed(2)}`}</span>
                   </div>
                   <div className="linea-resumen">
@@ -551,39 +547,38 @@ export default function Checkout() {
           </div>
         )}
 
-        {}
+        {/* PASO 4 */}
         {paso === 4 && (
           <div className="checkout-paso confirmacion">
             <div className="confirmacion-content">
-              <div className="confirmacion-icon">âœ…</div>
-              <h2>Â¡Pedido Realizado con Ã‰xito!</h2>
+              <div className="confirmacion-icon">✅</div>
+              <h2>¡Pedido Realizado con Éxito!</h2>
               <p>Tu pedido ha sido procesado correctamente.</p>
-              <p><strong>NÃºmero de pedido:</strong> #RP{Date.now()}</p>
+              <p><strong>Número de pedido:</strong> #RP{Date.now()}</p>
               
               <div className="proximos-pasos">
-                <h3>ðŸ“‹ PrÃ³ximos Pasos:</h3>
+                <h3>📬 Próximos Pasos:</h3>
                 <ul>
-                  <li>âœ‰ï¸ RecibirÃ¡s un email de confirmaciÃ³n</li>
-                  <li>ðŸ“¦ Prepararemos tu pedido</li>
-                  <li>ðŸšš Te notificaremos cuando estÃ© en camino</li>
-                  <li>ðŸ  Entrega estimada: 3-5 dÃ­as hÃ¡biles</li>
+                  <li>📧 Recibirás un email de confirmación</li>
+                  <li>📦 Prepararemos tu pedido</li>
+                  <li>🚚 Te notificaremos cuando esté en camino</li>
+                  <li>🏠 Entrega estimada: 3-5 días hábiles</li>
                 </ul>
               </div>
               
               <div className="acciones-finales">
                 <Link to="/catalogo" className="btn-continuar-comprando">
-                  ðŸ›ï¸ Seguir Comprando
+                  🛍️ Seguir Comprando
                 </Link>
                 <Link to="/" className="btn-inicio">
-                  ðŸ  Volver al Inicio
+                  🏠 Volver al Inicio
                 </Link>
               </div>
             </div>
           </div>
         )}
+
       </div>
     </div>
   );
 }
-
-

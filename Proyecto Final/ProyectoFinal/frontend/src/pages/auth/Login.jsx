@@ -32,7 +32,7 @@ export default function Login() {
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
-      setError('Por favor ingresa un email vÃ¡lido');
+      setError('Por favor ingresa un email válido');
       setLoading(false);
       return;
     }
@@ -51,7 +51,7 @@ export default function Login() {
           navigate('/');
         }
       } else {
-        setError('Respuesta invÃ¡lida del servidor');
+        setError('Respuesta inválida del servidor');
       }
     } catch (err) {
       
@@ -61,19 +61,19 @@ export default function Login() {
         const errorMessage = err.response.data?.error || err.response.data?.message;
         
         if (status === 400) {
-          setError(errorMessage || 'Datos de entrada invÃ¡lidos');
+          setError(errorMessage || 'Datos de entrada inválidos');
         } else if (status === 401) {
-          setError('Credenciales incorrectas. Verifica tu email y contraseÃ±a.');
+          setError('Credenciales incorrectas. Verifica tu email y contraseña.');
         } else if (status === 429) {
-          setError('Demasiados intentos. Intenta de nuevo mÃ¡s tarde.');
+          setError('Demasiados intentos. Intenta de nuevo más tarde.');
         } else if (status >= 500) {
-          setError('Error del servidor. Intenta de nuevo mÃ¡s tarde.');
+          setError('Error del servidor. Intenta de nuevo más tarde.');
         } else {
-          setError(errorMessage || 'Error al iniciar sesiÃ³n');
+          setError(errorMessage || 'Error al iniciar sesión');
         }
       } else if (err.request) {
         
-        setError('No se puede conectar al servidor. Verifica tu conexiÃ³n e intenta de nuevo.');
+        setError('No se puede conectar al servidor. Verifica tu conexión e intenta de nuevo.');
       } else {
         
         setError('Error inesperado. Intenta de nuevo.');
@@ -87,9 +87,9 @@ export default function Login() {
     <div className="auth-container">
       <div className="auth-card">
         <div className="auth-header">
-          <Link to="/" className="back-link">â† Volver al inicio</Link>
-          <h1>ðŸª RepuestosAuto</h1>
-          <h2>Iniciar SesiÃ³n</h2>
+          <Link to="/" className="back-link">← Volver al inicio</Link>
+          <h1>🏪 RepuestosAuto</h1>
+          <h2>Iniciar Sesión</h2>
           <p>Accede a tu cuenta para gestionar tus compras</p>
         </div>
 
@@ -97,7 +97,7 @@ export default function Login() {
           {error && <div className="error-message">{error}</div>}
           
           <div className="form-group">
-            <label htmlFor="email">ðŸ“§ Email</label>
+            <label htmlFor="email">📧 Email</label>
             <input
               type="email"
               id="email"
@@ -110,14 +110,14 @@ export default function Login() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="password">ðŸ”’ ContraseÃ±a</label>
+            <label htmlFor="password">🔒 Contraseña</label>
             <input
               type="password"
               id="password"
               name="password"
               value={formData.password}
               onChange={handleChange}
-              placeholder="Tu contraseÃ±a"
+              placeholder="Tu contraseña"
               required
             />
           </div>
@@ -127,23 +127,23 @@ export default function Login() {
             className="auth-button"
             disabled={loading}
           >
-            {loading ? 'â³ Iniciando sesiÃ³n...' : 'ðŸš€ Iniciar SesiÃ³n'}
+            {loading ? '⏳ Iniciando sesión...' : '🚀 Iniciar Sesión'}
           </button>
         </form>
 
         <div className="auth-links">
-          <p>Â¿No tienes cuenta? <Link to="/auth/register">RegÃ­strate aquÃ­</Link></p>
-          <p><Link to="/auth/forgot">Â¿Olvidaste tu contraseÃ±a?</Link></p>
+          <p>¿No tienes cuenta? <Link to="/auth/register">Regístrate aquí</Link></p>
+          <p><Link to="/auth/forgot">¿Olvidaste tu contraseña?</Link></p>
         </div>
 
         <div className="demo-accounts">
-          <h4>ðŸ§ª Cuentas de prueba:</h4>
+          <h4>🧪 Cuentas de prueba:</h4>
           <div className="demo-list">
             <div className="demo-account">
-              <strong>ðŸ‘¤ Usuario:</strong> juan@gmail.com / user123
+              <strong>👤 Usuario:</strong> juan@gmail.com / user123
             </div>
             <div className="demo-account">
-              <strong>ðŸ‘‘ Admin:</strong> admin@repuestos.com / admin123
+              <strong>🔐 Admin:</strong> admin@repuestos.com / admin123
             </div>
           </div>
         </div>
@@ -151,5 +151,4 @@ export default function Login() {
     </div>
   );
 }
-
 

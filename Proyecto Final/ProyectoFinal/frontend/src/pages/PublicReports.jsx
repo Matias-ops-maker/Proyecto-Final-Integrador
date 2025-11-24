@@ -36,20 +36,20 @@ export default function PublicReports() {
 
   return (
     <div className="page">
-      {}
+      {/* NAV */}
       <nav className="nav-bar">
         <div className="nav-brand">
-          <Link to="/">ðŸª RepuestosAuto</Link>
+          <Link to="/"> RepuestosAuto</Link>
         </div>
         <div className="nav-links">
           <Link to="/">Inicio</Link>
-          <Link to="/catalogo">CatÃ¡logo</Link>
-          <Link to="/auth/login">Iniciar SesiÃ³n</Link>
+          <Link to="/catalogo">Catálogo</Link>
+          <Link to="/auth/login">Iniciar Sesión</Link>
         </div>
       </nav>
 
       <div className="container" style={{ maxWidth: '800px', margin: '2rem auto', padding: '0 1rem' }}>
-        <h1>ðŸ“Š Reportes y EstadÃ­sticas</h1>
+        <h1>Reportes y Estadísticas</h1>
         <p>Descarga reportes de ventas e inventario en diferentes formatos.</p>
 
         {error && (
@@ -65,6 +65,7 @@ export default function PublicReports() {
           </div>
         )}
 
+        {/* REPORTES */}
         <div className="reports-grid" style={{ 
           display: 'grid', 
           gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', 
@@ -72,15 +73,15 @@ export default function PublicReports() {
           marginTop: '2rem'
         }}>
           
-          {}
+          {/* Reporte de Ventas */}
           <div className="report-card" style={{
             border: '1px solid #ddd',
             borderRadius: '8px',
             padding: '1.5rem',
             backgroundColor: '#fff'
           }}>
-            <h3>ðŸ“ˆ Reporte de Ventas</h3>
-            <p>EstadÃ­sticas generales de ventas y productos mÃ¡s vendidos.</p>
+            <h3>Reporte de Ventas</h3>
+            <p>Estadísticas generales de ventas y productos más vendidos.</p>
             
             <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
               <button
@@ -96,7 +97,7 @@ export default function PublicReports() {
                   opacity: loading ? 0.6 : 1
                 }}
               >
-                ðŸ“„ PDF
+                PDF
               </button>
               <button
                 onClick={() => downloadReport('sales', 'xlsx')}
@@ -111,19 +112,19 @@ export default function PublicReports() {
                   opacity: loading ? 0.6 : 1
                 }}
               >
-                ðŸ“Š Excel
+                Excel
               </button>
             </div>
           </div>
 
-          {}
+          {/* Reporte de Inventario */}
           <div className="report-card" style={{
             border: '1px solid #ddd',
             borderRadius: '8px',
             padding: '1.5rem',
             backgroundColor: '#fff'
           }}>
-            <h3>ðŸ“¦ Reporte de Inventario</h3>
+            <h3>Reporte de Inventario</h3>
             <p>Estado actual del inventario y productos con bajo stock.</p>
             
             <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
@@ -140,7 +141,7 @@ export default function PublicReports() {
                   opacity: loading ? 0.6 : 1
                 }}
               >
-                ðŸ“„ PDF
+                📄 PDF
               </button>
               <button
                 onClick={() => downloadReport('inventory', 'xlsx')}
@@ -155,14 +156,14 @@ export default function PublicReports() {
                   opacity: loading ? 0.6 : 1
                 }}
               >
-                ðŸ“Š Excel
+                Excel
               </button>
             </div>
           </div>
 
         </div>
 
-        {}
+        {/* INFO EXTRA */}
         <div style={{ 
           marginTop: '3rem', 
           padding: '1.5rem', 
@@ -170,12 +171,12 @@ export default function PublicReports() {
           borderRadius: '8px',
           border: '1px solid #dee2e6'
         }}>
-          <h3>ðŸ’¡ InformaciÃ³n</h3>
+          <h3>Información</h3>
           <ul>
-            <li>Los reportes se generan con datos actualizados</li>
-            <li>Los archivos PDF son ideales para presentaciones</li>
-            <li>Los archivos Excel permiten anÃ¡lisis adicional</li>
-            <li>Para reportes detallados, <Link to="/auth/login">inicia sesiÃ³n como administrador</Link></li>
+            <li>Los informes se generan con datos actualizados.</li>
+            <li>Los archivos PDF son ideales para presentaciones.</li>
+            <li>Los archivos Excel permiten análisis adicional.</li>
+            <li>Para reportes detallados, <Link to="/auth/login">inicia sesión como administrador</Link></li>
           </ul>
         </div>
 
@@ -185,11 +186,10 @@ export default function PublicReports() {
             padding: '2rem',
             fontSize: '1.2rem'
           }}>
-            â³ Generando reporte...
+            Generando reporte...
           </div>
         )}
       </div>
     </div>
   );
 }
-

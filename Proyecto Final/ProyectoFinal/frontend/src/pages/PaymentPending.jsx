@@ -31,13 +31,13 @@ const PaymentPending = () => {
     <div className="payment-status-container">
       <div className="payment-status-content pending">
         <div className="status-icon pending-icon">
-          â³
+          ⏳
         </div>
         
         <h1>Pago Pendiente</h1>
         
         <div className="status-message">
-          <p>Tu pago estÃ¡ siendo procesado.</p>
+          <p>Tu pago está siendo procesado.</p>
           <p>Te notificaremos cuando se confirme el pago.</p>
         </div>
         
@@ -62,11 +62,11 @@ const PaymentPending = () => {
         )}
         
         <div className="pending-info">
-          <h3>Â¿QuÃ© significa pago pendiente?</h3>
+          <h3>¿Qué significa pago pendiente?</h3>
           <ul>
             <li>Pago en efectivo: Debes completar el pago en el punto autorizado</li>
-            <li>Transferencia bancaria: Puede tardar hasta 3 dÃ­as hÃ¡biles</li>
-            <li>Pago con tarjeta: Se estÃ¡ verificando la transacciÃ³n</li>
+            <li>Transferencia bancaria: Puede tardar hasta 3 días hábiles</li>
+            <li>Pago con tarjeta: Se está verificando la transacción</li>
           </ul>
         </div>
         

@@ -31,14 +31,14 @@ const PaymentFailure = () => {
     <div className="payment-status-container">
       <div className="payment-status-content failure">
         <div className="status-icon failure-icon">
-          âœ—
+          ✖
         </div>
         
         <h1>Pago Fallido</h1>
         
         <div className="status-message">
           <p>Hubo un problema al procesar tu pago.</p>
-          <p>No se realizÃ³ ningÃºn cargo a tu tarjeta.</p>
+          <p>No se realizó ningún cargo a tu tarjeta.</p>
         </div>
         
         {paymentData && paymentData.paymentId && (
@@ -60,7 +60,7 @@ const PaymentFailure = () => {
           <ul>
             <li>Datos incorrectos de la tarjeta</li>
             <li>Fondos insuficientes</li>
-            <li>Problemas de conexiÃ³n</li>
+            <li>Problemas de conexión</li>
             <li>Tarjeta vencida o bloqueada</li>
           </ul>
         </div>

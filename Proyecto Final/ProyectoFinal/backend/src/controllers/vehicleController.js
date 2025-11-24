@@ -3,7 +3,7 @@ import { Op } from "sequelize";
 
 export async function listVehicles(req, res) {
     try {
-        const { page = 1, pageSize = 20, q, marca, modelo, aÃ±o } = req.query;
+        const { page = 1, pageSize = 20, q, marca, modelo, año } = req.query;
         const offset = (page - 1) * pageSize;
 
         const filtros = {};
@@ -15,14 +15,14 @@ export async function listVehicles(req, res) {
         }
         if (marca) filtros.marca = { [Op.like]: `%${marca}%` };
         if (modelo) filtros.modelo = { [Op.like]: `%${modelo}%` };
-        if (aÃ±o) {
-            const aÃ±oNum = parseInt(aÃ±o);
+        if (ano) {
+            const añoNum = parseInt(año);
             filtros[Op.and] = [
-                { aÃ±o_desde: { [Op.lte]: aÃ±oNum } },
+                { ano_desde: { [Op.lte]: añoNum } },
                 {
                     [Op.or]: [
-                        { aÃ±o_hasta: { [Op.gte]: aÃ±oNum } },
-                        { aÃ±o_hasta: null }
+                        { año_hasta: { [Op.gte]: añoNum } },
+                        { año_hasta: null }
                     ]
                 }
             ];
@@ -68,9 +68,9 @@ export async function getVehicle(req, res) {
 
 export async function createVehicle(req, res) {
     try {
-        const { marca, modelo, aÃ±o_desde, aÃ±o_hasta, motor } = req.body;
+        const { marca, modelo, año_desde, año_hasta, motor } = req.body;
 
-        if (!marca || !modelo || !aÃ±o_desde) {
+        if (!marca || !modelo || !año_desde) {
             return res.status(400).json({ 
                 error: "Marca, modelo y aÃ±o desde son requeridos" 
             });
@@ -79,8 +79,8 @@ export async function createVehicle(req, res) {
         const vehicle = await Vehicle.create({ 
             marca, 
             modelo, 
-            aÃ±o_desde, 
-            aÃ±o_hasta, 
+            año_desde, 
+            año_hasta, 
             motor 
         });
         
@@ -105,7 +105,8 @@ export async function updateVehicle(req, res) {
 export async function deleteVehicle(req, res) {
     try {
         const vehicle = await Vehicle.findByPk(req.params.id);
-        if (!vehicle) return res.status(404).json({ error: "VehÃ­culo no encontrado" });
+        if (!vehicle) return res.status(404).json({ error: "VehÃ­culo no encontrado" });
+
         await Fitment.destroy({ where: { vehicle_id: vehicle.id } });
         
         await vehicle.destroy();

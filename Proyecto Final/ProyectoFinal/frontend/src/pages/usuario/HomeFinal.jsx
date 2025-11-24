@@ -29,24 +29,24 @@ export default function HomeFinal() {
             'x-api-key': API_KEY
           }
         });
-        
+
         if (!response.ok) {
           throw new Error('Error al cargar productos');
         }
-        
+
         const data = await response.json();
         const productosData = data.data || [];
-        
+
         const productosFormateados = productosData.map(producto => ({
           id: producto.id,
           name: producto.nombre,
           brand: producto.Brand?.nombre || 'Sin marca',
           price: parseFloat(producto.precio),
           stock: producto.stock,
-          category: producto.Category?.nombre || 'Sin categorÃ­a',
+          category: producto.Category?.nombre || 'Sin categoría',
           image: producto.imagen_url || 'https://via.placeholder.com/200x150/9ca3af?text=Sin+Imagen',
         }));
-        
+
         setProductos(productosFormateados);
 
         try {
@@ -57,17 +57,17 @@ export default function HomeFinal() {
             icon: getCategoryIcon(cat.nombre),
             color: getCategoryColor(cat.nombre)
           }));
-          
+
           setCategorias(categoriasFormatted);
         } catch (err) {
           setCategorias([
-            { name: "Filtros", icon: "ðŸ”", color: "#10B981" },
-            { name: "Frenos", icon: "ðŸ›‘", color: "#EF4444" },
-            { name: "Motor", icon: "ðŸ”§", color: "#3B82F6" },
-            { name: "ElÃ©ctrica", icon: "âš¡", color: "#8B5CF6" }
+            { name: "Filtros", icon: "🔍", color: "#10B981" },
+            { name: "Frenos", icon: "🛑", color: "#EF4444" },
+            { name: "Motor", icon: "🔧", color: "#3B82F6" },
+            { name: "Eléctrica", icon: "⚡", color: "#8B5CF6" }
           ]);
         }
-        
+
       } catch (error) {
         setError('Error cargando datos');
       } finally {
@@ -101,27 +101,27 @@ export default function HomeFinal() {
 
     setCarrito(nuevoCarrito);
     localStorage.setItem('carrito', JSON.stringify(nuevoCarrito));
-    
+
     window.dispatchEvent(new Event('storage'));
-    
+
     alert(`${producto.name} agregado al carrito!`);
   };
 
   const getCategoryIcon = (nombre) => {
     const iconos = {
-      'Motor': 'ðŸ”§',
-      'Filtros': 'ðŸ”', 
-      'Frenos': 'ðŸ›‘',
-      'Lubricantes': 'ðŸ›¢ï¸',
-      'ElÃ©ctrica': 'âš¡',
-      'SuspensiÃ³n': 'ðŸŽï¸',
-      'TransmisiÃ³n': 'âš™ï¸',
-      'Encendido': 'ðŸ”¥',
-      'NeumÃ¡ticos': 'ðŸ›ž',
-      'Escape': 'ðŸ’¨',
-      'ClimatizaciÃ³n': 'â„ï¸'
+      'Motor': '🔧',
+      'Filtros': '🔍',
+      'Frenos': '🛑',
+      'Lubricantes': '🛢️',
+      'Eléctrica': '⚡',
+      'Suspensión': '🏎️',
+      'Transmisión': '⚙️',
+      'Encendido': '🔥',
+      'Neumáticos': '🛞',
+      'Escape': '💨',
+      'Climatización': '❄️'
     };
-    return iconos[nombre] || 'ðŸ”§';
+    return iconos[nombre] || '🔧';
   };
 
   const getCategoryColor = (nombre) => {
@@ -130,13 +130,13 @@ export default function HomeFinal() {
       'Filtros': '#10B981',
       'Frenos': '#EF4444',
       'Lubricantes': '#F59E0B',
-      'ElÃ©ctrica': '#8B5CF6',
-      'SuspensiÃ³n': '#06B6D4',
-      'TransmisiÃ³n': '#84CC16',
+      'Eléctrica': '#8B5CF6',
+      'Suspensión': '#06B6D4',
+      'Transmisión': '#84CC16',
       'Encendido': '#F97316',
-      'NeumÃ¡ticos': '#6B7280',
+      'Neumáticos': '#6B7280',
       'Escape': '#64748B',
-      'ClimatizaciÃ³n': '#14B8A6'
+      'Climatización': '#14B8A6'
     };
     return colores[nombre] || '#3B82F6';
   };
@@ -144,14 +144,14 @@ export default function HomeFinal() {
   const handleSearchChange = (e) => {
     const term = e.target.value;
     setSearchTerm(term);
-    
+
     if (term.length > 2) {
-      const suggestions = productos.filter(producto => 
+      const suggestions = productos.filter(producto =>
         producto.name.toLowerCase().includes(term.toLowerCase()) ||
         producto.brand.toLowerCase().includes(term.toLowerCase()) ||
         producto.category.toLowerCase().includes(term.toLowerCase())
       ).slice(0, 5);
-      
+
       setSearchSuggestions(suggestions);
       setShowSuggestions(true);
     } else {
@@ -179,9 +179,9 @@ export default function HomeFinal() {
     return (
       <div className="page">
         <UserNavbar />
-        <div style={{padding: '40px', textAlign: 'center'}}>
+        <div style={{ padding: '40px', textAlign: 'center' }}>
           <div className="loading-spinner"></div>
-          <h2>ðŸ”„ Cargando RepuestosAuto...</h2>
+          <h2>🔧 Cargando RepuestosAuto...</h2>
           <p>Conectando con la base de datos...</p>
         </div>
       </div>
@@ -193,13 +193,13 @@ export default function HomeFinal() {
       <UserNavbar />
 
       <div className="hero">
-        <h1 className="hero-title">ðŸš— Encuentra los mejores repuestos automotrices</h1>
+        <h1 className="hero-title">🚗 Encuentra los mejores repuestos automotrices</h1>
         <p className="hero-subtitle">Todo lo que necesitas para tu auto en un solo lugar. Repuestos nuevos y usados de calidad.</p>
         <div className="hero-search-container">
           <div className="search-input-container">
-            <input 
-              type="text" 
-              placeholder="ðŸ” Buscar repuestos (ej: filtro aceite, pastillas freno...)" 
+            <input
+              type="text"
+              placeholder="🔍 Buscar repuestos (ej: filtro aceite, pastillas freno...)"
               className="hero-search"
               value={searchTerm}
               onChange={handleSearchChange}
@@ -209,8 +209,8 @@ export default function HomeFinal() {
             {showSuggestions && searchSuggestions.length > 0 && (
               <div className="search-suggestions">
                 {searchSuggestions.map((producto) => (
-                  <div 
-                    key={producto.id} 
+                  <div
+                    key={producto.id}
                     className="suggestion-item"
                     onClick={() => selectSuggestion(producto)}
                   >
@@ -226,7 +226,7 @@ export default function HomeFinal() {
       </div>
 
       <section className="section">
-        <h2 className="section-title">ðŸ› ï¸ CategorÃ­as populares</h2>
+        <h2 className="section-title">🧩 Categorías populares</h2>
         <div className="grid grid-cols-4 gap-4">
           {categorias.map((cat) => (
             <Link key={cat.name} to={`/catalogo?categoria=${cat.name}`} className="category-card">
@@ -241,28 +241,28 @@ export default function HomeFinal() {
       </section>
 
       <section className="section">
-        <h2 className="section-title">â­ Productos destacados</h2>
+        <h2 className="section-title">⭐ Productos destacados</h2>
         <div className="grid grid-cols-4 gap-4">
           {productos.map((producto) => (
             <div key={producto.id} className="product-card">
-              <div 
+              <div
                 className="product-image"
                 onClick={() => navigate(`/producto/${producto.id}`)}
                 style={{ cursor: 'pointer' }}
               >
-                <img 
-                  src={producto.image} 
+                <img
+                  src={producto.image}
                   alt={producto.name}
                   onError={(e) => {
                     e.target.src = 'https://via.placeholder.com/200x150/9ca3af?text=Error';
                   }}
                 />
                 {producto.stock < 100 && (
-                  <span className="stock-badge">Â¡Ãšltimas unidades!</span>
+                  <span className="stock-badge">¡Últimas unidades!</span>
                 )}
               </div>
               <div className="product-info">
-                <h3 
+                <h3
                   className="product-name"
                   onClick={() => navigate(`/producto/${producto.id}`)}
                   style={{ cursor: 'pointer', color: '#3B82F6' }}
@@ -272,11 +272,11 @@ export default function HomeFinal() {
                 <p className="product-brand">{producto.brand}</p>
                 <div className="product-footer">
                   <span className="product-price">${producto.price}</span>
-                  <button 
+                  <button
                     className="add-cart-btn"
                     onClick={() => agregarAlCarrito(producto)}
                   >
-                    ðŸ›’ Agregar
+                    🛒 Agregar
                   </button>
                 </div>
                 <p className="product-stock">Stock: {producto.stock} unidades</p>
@@ -285,17 +285,17 @@ export default function HomeFinal() {
           ))}
         </div>
         <div className="view-more">
-          <Link to="/catalogo" className="btn-primary">Ver todos los productos â†’</Link>
+          <Link to="/catalogo" className="btn-primary">Ver todos los productos →</Link>
         </div>
       </section>
 
       <section className="section">
-        <h2 className="section-title">ðŸ­ Marcas que trabajamos</h2>
+        <h2 className="section-title">🏁 Marcas que trabajamos</h2>
         <div className="brands-grid">
           {["Bosch", "Brembo", "Mobil", "Castrol", "NGK", "Monroe", "Sachs", "Mahle"].map((marca) => (
-            <Link 
-              key={marca} 
-              to={`/catalogo?marca=${marca}`} 
+            <Link
+              key={marca}
+              to={`/catalogo?marca=${marca}`}
               className="brand-card"
               style={{ textDecoration: 'none', color: 'inherit' }}
             >
@@ -305,24 +305,28 @@ export default function HomeFinal() {
         </div>
       </section>
 
-      <div style={{padding: '20px', backgroundColor: error ? '#fee2e2' : '#dcfce7', margin: '20px', borderRadius: '10px', borderLeft: `4px solid ${error ? '#ef4444' : '#10b981'}`}}>
-        <h3>ðŸ§ª Estado del Sistema</h3>
+      <div style={{
+        padding: '20px',
+        backgroundColor: error ? '#fee2e2' : '#dcfce7',
+        margin: '20px',
+        borderRadius: '10px',
+        borderLeft: `4px solid ${error ? '#ef4444' : '#10b981'}`
+      }}>
+        <h3>🧰 Estado del Sistema</h3>
         {error ? (
           <div>
-            <p>âŒ Error: {error}</p>
-            <p>ðŸ”„ Usando datos de fallback</p>
+            <p>❌ Error: {error}</p>
+            <p>🔧 Usando datos de fallback</p>
           </div>
         ) : (
           <div>
-            <p>âœ… API funcionando correctamente</p>
-            <p>âœ… {productos.length} productos cargados</p>
-            <p>âœ… {categorias.length} categorÃ­as cargadas</p>
-            <p>âœ… NavegaciÃ³n operativa</p>
+            <p>✅ API funcionando correctamente</p>
+            <p>✅ {productos.length} productos cargados</p>
+            <p>✅ {categorias.length} categorías cargadas</p>
+            <p>✅ Navegación operativa</p>
           </div>
         )}
       </div>
     </div>
   );
 }
-
-

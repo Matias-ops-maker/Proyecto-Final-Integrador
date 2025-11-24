@@ -12,21 +12,23 @@ export default function Categories() {
     const [formData, setFormData] = useState({
         nombre: '',
         descripcion: ''
-    });
+    });
+
     const fetchCategories = async () => {
         try {
-            setLoading(true);
+            setLoading(true);
+
             const staticCategories = [
                 { id: 1, nombre: 'Filtros', descripcion: 'Filtros de aceite, aire y combustible', productos: 8 },
-                { id: 2, nombre: 'Frenos', descripcion: 'Pastillas, discos y lÃ­quidos de freno', productos: 6 },
-                { id: 3, nombre: 'Aceites', descripcion: 'Aceites de motor y transmisiÃ³n', productos: 5 },
-                { id: 4, nombre: 'Sistema ElÃ©ctrico', descripcion: 'BaterÃ­as, alternadores y componentes', productos: 7 },
-                { id: 5, nombre: 'SuspensiÃ³n', descripcion: 'Amortiguadores y componentes de suspensiÃ³n', productos: 4 },
-                { id: 6, nombre: 'TransmisiÃ³n', descripcion: 'Embragues y componentes de transmisiÃ³n', productos: 10 }
+                { id: 2, nombre: 'Frenos', descripcion: 'Pastillas, discos y líquidos de freno', productos: 6 },
+                { id: 3, nombre: 'Aceites', descripcion: 'Aceites de motor y transmisión', productos: 5 },
+                { id: 4, nombre: 'Sistema Eléctrico', descripcion: 'Baterías, alternadores y componentes', productos: 7 },
+                { id: 5, nombre: 'Suspensión', descripcion: 'Amortiguadores y componentes de suspensión', productos: 4 },
+                { id: 6, nombre: 'Transmisión', descripcion: 'Embragues y componentes de transmisión', productos: 10 }
             ];
             setCategories(staticCategories);
         } catch (error) {
-            } finally {
+        } finally {
             setLoading(false);
         }
     };
@@ -38,27 +40,29 @@ export default function Categories() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            if (editingCategory) {
-                } else {
-                }
+            if (editingCategory) {
+
+            } else {
+
+            }
             
             setShowForm(false);
             setEditingCategory(null);
             setFormData({ nombre: '', descripcion: '' });
             fetchCategories();
         } catch (error) {
-            }
+        }
     };
 
     const deleteCategory = async (id) => {
-        if (!confirm("Â¿EstÃ¡s seguro de que quieres eliminar esta categorÃ­a?")) {
+        if (!confirm("¿Estás seguro de que quieres eliminar esta categoría?")) {
             return;
         }
         
         try {
             fetchCategories();
         } catch (error) {
-            }
+        }
     };
 
     const editCategory = (category) => {
@@ -75,7 +79,7 @@ export default function Categories() {
             <div className="admin-container">
                 <div className="loading-container">
                     <div className="loading-spinner"></div>
-                    <p>Cargando categorÃ­as...</p>
+                    <p>Cargando categorías...</p>
                 </div>
             </div>
         );
@@ -84,7 +88,7 @@ export default function Categories() {
     return (
         <div className="admin-container">
             <div className="admin-header">
-                <h1>ðŸ·ï¸ GestiÃ³n de CategorÃ­as</h1>
+                <h1>🏷️ Gestión de Categorías</h1>
                 <div className="header-buttons">
                     <button 
                         className="btn-primary"
@@ -94,13 +98,13 @@ export default function Categories() {
                             setShowForm(!showForm);
                         }}
                     >
-                        {showForm ? 'âŒ Cancelar' : 'âž• Nueva CategorÃ­a'}
+                        {showForm ? '❌ Cancelar' : '➕ Nueva Categoría'}
                     </button>
                     <button 
                         className="btn-secondary"
                         onClick={() => navigate('/admin/dashboard')}
                     >
-                        â† Volver al Dashboard
+                        ← Volver al Dashboard
                     </button>
                 </div>
             </div>
@@ -108,10 +112,10 @@ export default function Categories() {
             {showForm && (
                 <div className="form-container">
                     <form onSubmit={handleSubmit} className="category-form">
-                        <h3>{editingCategory ? 'Editar CategorÃ­a' : 'Nueva CategorÃ­a'}</h3>
+                        <h3>{editingCategory ? 'Editar Categoría' : 'Nueva Categoría'}</h3>
                         
                         <div className="form-group">
-                            <label htmlFor="nombre">Nombre de la CategorÃ­a *</label>
+                            <label htmlFor="nombre">Nombre de la Categoría *</label>
                             <input
                                 type="text"
                                 id="nombre"
@@ -123,13 +127,13 @@ export default function Categories() {
                         </div>
 
                         <div className="form-group">
-                            <label htmlFor="descripcion">DescripciÃ³n</label>
+                            <label htmlFor="descripcion">Descripción</label>
                             <textarea
                                 id="descripcion"
                                 value={formData.descripcion}
                                 onChange={(e) => setFormData({...formData, descripcion: e.target.value})}
                                 rows="3"
-                                placeholder="DescripciÃ³n de la categorÃ­a..."
+                                placeholder="Descripción de la categoría..."
                             />
                         </div>
 
@@ -138,7 +142,7 @@ export default function Categories() {
                                 Cancelar
                             </button>
                             <button type="submit" className="btn-primary">
-                                {editingCategory ? 'Actualizar' : 'Crear'} CategorÃ­a
+                                {editingCategory ? 'Actualizar' : 'Crear'} Categoría
                             </button>
                         </div>
                     </form>
@@ -151,7 +155,7 @@ export default function Categories() {
                         <tr>
                             <th>ID</th>
                             <th>Nombre</th>
-                            <th>DescripciÃ³n</th>
+                            <th>Descripción</th>
                             <th>Productos</th>
                             <th>Acciones</th>
                         </tr>
@@ -174,16 +178,16 @@ export default function Categories() {
                                         <button 
                                             className="btn-action edit"
                                             onClick={() => editCategory(category)}
-                                            title="Editar categorÃ­a"
+                                            title="Editar categoría"
                                         >
-                                            âœï¸
+                                            ✏️
                                         </button>
                                         <button 
                                             className="btn-action delete"
                                             onClick={() => deleteCategory(category.id)}
-                                            title="Eliminar categorÃ­a"
+                                            title="Eliminar categoría"
                                         >
-                                            ðŸ—‘ï¸
+                                            🗑️
                                         </button>
                                     </div>
                                 </td>
@@ -196,7 +200,7 @@ export default function Categories() {
             <div className="admin-stats-footer">
                 <div className="stat-card">
                     <span className="stat-number">{categories.length}</span>
-                    <span className="stat-label">Total categorÃ­as</span>
+                    <span className="stat-label">Total categorías</span>
                 </div>
                 <div className="stat-card">
                     <span className="stat-number">
@@ -208,4 +212,3 @@ export default function Categories() {
         </div>
     );
 }
-

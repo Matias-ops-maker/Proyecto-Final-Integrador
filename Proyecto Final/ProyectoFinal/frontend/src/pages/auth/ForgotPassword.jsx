@@ -14,14 +14,14 @@ export default function ForgotPassword() {
       return;
     }
     setError("");
-    setMessage(`Se enviÃ³ un enlace de recuperaciÃ³n a ${email}`);
+    setMessage(`Se envió un enlace de recuperación a ${email}`);
     setEmail(""); 
   };
 
   return (
     <div className=" ">
       <div className="auth-card">
-        <h1 className="auth-title">Recuperar ContraseÃ±a</h1>
+        <h1 className="auth-title">Recuperar Contraseña</h1>
         {error && <p className="auth-error">{error}</p>}
         {message && <p className=" ">{message}</p>}
 
@@ -38,12 +38,10 @@ export default function ForgotPassword() {
 
         <div className="auth-footer">
           <p>
-            Recordaste tu contraseÃ±a? <Link to="/auth/login" className="auth-link">Inicia sesiÃ³n</Link>
+            ¿Recordaste tu contraseña? <Link to="/auth/login" className="auth-link">Inicia sesión</Link>
           </p>
         </div>
       </div>
     </div>
   );
 }
-
-

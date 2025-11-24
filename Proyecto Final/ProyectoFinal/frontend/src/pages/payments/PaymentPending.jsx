@@ -17,7 +17,7 @@ const PaymentPending = () => {
           const response = await api.get(`/payments/status/${paymentId}`);
           setPaymentInfo(response.data);
         }
-        
+
         setLoading(false);
       } catch (error) {
         setLoading(false);
@@ -31,12 +31,12 @@ const PaymentPending = () => {
     if (paymentInfo?.payment_id) {
       try {
         const response = await api.get(`/payments/status/${paymentInfo.payment_id}`);
-        setPaymentInfo(response.data);
+        setPaymentInfo(response.data);
+
         if (response.data.status === 'approved') {
           navigate('/payment-success');
         }
-      } catch (error) {
-        }
+      } catch (error) {}
     }
   };
 
@@ -57,15 +57,21 @@ const PaymentPending = () => {
     <div className="payment-result-container pending">
       <div className="payment-result-card">
         <div className="pending-icon">
-          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http:
+          <svg 
+            width="64" 
+            height="64" 
+            viewBox="0 0 24 24" 
+            fill="none" 
+            xmlns="http://www.w3.org/2000/svg"
+          >
             <circle cx="12" cy="12" r="11" fill="#f59e0b"/>
             <circle cx="12" cy="12" r="3" fill="white"/>
           </svg>
         </div>
-        
+
         <h1>Pago en proceso</h1>
         <p className="pending-message">
-          Tu pago estÃ¡ siendo procesado. Te notificaremos por email cuando se confirme.
+          Tu pago está siendo procesado. Te notificaremos por email cuando se confirme.
         </p>
 
         {paymentInfo && (
@@ -80,7 +86,7 @@ const PaymentPending = () => {
               <span className="status-pending">{paymentInfo.status}</span>
             </div>
             <div className="detail-row">
-              <span>MÃ©todo de pago:</span>
+              <span>Método de pago:</span>
               <span>{paymentInfo.payment_method || 'MercadoPago'}</span>
             </div>
             <div className="detail-row">
@@ -91,12 +97,12 @@ const PaymentPending = () => {
         )}
 
         <div className="pending-info">
-          <h3>Â¿QuÃ© significa esto?</h3>
+          <h3>¿Qué significa esto?</h3>
           <ul>
             <li>El pago puede demorar hasta 24 horas en procesarse</li>
-            <li>RecibirÃ¡s un email cuando se confirme</li>
+            <li>Recibirás un email cuando se confirme</li>
             <li>Puedes verificar el estado en "Mis pedidos"</li>
-            <li>Si usaste transferencia bancaria, puede demorar mÃ¡s</li>
+            <li>Si usaste transferencia bancaria, puede demorar más</li>
           </ul>
         </div>
 
@@ -120,4 +126,3 @@ const PaymentPending = () => {
 };
 
 export default PaymentPending;
-

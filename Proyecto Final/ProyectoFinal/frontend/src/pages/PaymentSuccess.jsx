@@ -31,7 +31,8 @@ const PaymentSuccess = () => {
         externalReference
       });
     } catch (error) {
-      } finally {
+      // Manejo opcional de errores
+    } finally {
       setLoading(false);
     }
   };
@@ -59,14 +60,14 @@ const PaymentSuccess = () => {
     <div className="payment-status-container">
       <div className="payment-status-content success">
         <div className="status-icon success-icon">
-          âœ“
+          ✓
         </div>
         
-        <h1>Â¡Pago Exitoso!</h1>
+        <h1>¡Pago Exitoso!</h1>
         
         <div className="status-message">
           <p>Tu pago ha sido procesado correctamente.</p>
-          <p>RecibirÃ¡s un email de confirmaciÃ³n en breve.</p>
+          <p>Recibirás un email de confirmación en breve.</p>
         </div>
         
         {paymentData && (

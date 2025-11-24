@@ -65,9 +65,9 @@ export default function Catalogo() {
         brand: producto.Brand?.nombre || 'Sin marca',
         price: producto.precio,
         stock: producto.stock,
-        category: producto.Category?.nombre || 'Sin categorÃ­a',
+        category: producto.Category?.nombre || 'Sin categoría',
         image: producto.imagen_url || 'https://via.placeholder.com/200x150/9ca3af?text=Sin+Imagen',
-        description: producto.descripcion || 'Sin descripciÃ³n'
+        description: producto.descripcion || 'Sin descripción'
       }));
       
       setProductos(productosFormateados);
@@ -76,7 +76,6 @@ export default function Catalogo() {
       setCategorias(categoriasUnicas);
       
     } catch (error) {
-      
       setProductos([]);
       setCategorias([]);
     }
@@ -149,7 +148,6 @@ export default function Catalogo() {
         case 'stock':
           return b.stock - a.stock;
         case 'relevancia':
-
           if (filtros.busqueda) {
             const searchTerm = filtros.busqueda.toLowerCase();
             const aRelevance = (
@@ -178,40 +176,42 @@ export default function Catalogo() {
       <UserNavbar />
       
       <div className="catalogo-content">
-        {}
+
+        {/* Buscador */}
         <div className="search-section">
           <input
             type="text"
-            placeholder="ðŸ” Buscar repuestos, marcas, modelos..."
+            placeholder="🔍 Buscar repuestos, marcas, modelos..."
             value={filtros.busqueda}
             onChange={(e) => setFiltros({...filtros, busqueda: e.target.value})}
             className="search-input"
           />
           <button className="search-button">
-            ðŸ” Buscar
+            🔍 Buscar
           </button>
         </div>
 
         <div className="main-layout">
-          {}
+
+          {/* FILTROS */}
           <aside className="filtros-sidebar">
             <div className="filtros-header">
-              <h3>ðŸ” Filtros</h3>
+              <h3>🔎 Filtros</h3>
               <button 
                 className="limpiar-filtros"
                 onClick={() => setFiltros({categoria: '', marca: '', precioMin: '', precioMax: '', busqueda: ''})}
               >
-                ðŸ—‘ï¸ Limpiar
+                🧹 Limpiar
               </button>
             </div>
             
             <div className="filtro-grupo">
-              <label>CategorÃ­a</label>
+              <label>Categoría</label>
               <select 
                 value={filtros.categoria} 
                 onChange={(e) => setFiltros({...filtros, categoria: e.target.value})}
               >
-                <option value="">Todas las categorÃ­as</option>
+                <option value="">Todas las categorías</option>
                 {categorias.map(cat => (
                   <option key={cat} value={cat}>{cat}</option>
                 ))}
@@ -236,23 +236,23 @@ export default function Catalogo() {
               <div className="precio-inputs">
                 <input
                   type="number"
-                  placeholder="MÃ­n"
+                  placeholder="Mín"
                   value={filtros.precioMin}
                   onChange={(e) => setFiltros({...filtros, precioMin: e.target.value})}
                 />
                 <input
                   type="number"
-                  placeholder="MÃ¡x"
+                  placeholder="Máx"
                   value={filtros.precioMax}
                   onChange={(e) => setFiltros({...filtros, precioMax: e.target.value})}
                 />
               </div>
             </div>
 
-            {}
+            {/* CARRITO MINI */}
             {carrito.length > 0 && (
               <div className="carrito-sidebar">
-                <h4>ðŸ›’ Tu Carrito ({cantidadItems})</h4>
+                <h4>🛒 Tu Carrito ({cantidadItems})</h4>
                 <div className="carrito-items">
                   {carrito.slice(0, 3).map(item => (
                     <div key={item.id} className="carrito-item">
@@ -275,24 +275,24 @@ export default function Catalogo() {
                     </div>
                   ))}
                   {carrito.length > 3 && (
-                    <p className="mas-items">+{carrito.length - 3} productos mÃ¡s</p>
+                    <p className="mas-items">+{carrito.length - 3} productos más</p>
                   )}
                 </div>
                 <div className="carrito-total">
                   <strong>Total: ${totalCarrito.toFixed(2)}</strong>
                 </div>
                 <Link to="/usuario/carrito" className="btn-ver-carrito">
-                  ðŸ›’ Ver Carrito Completo
+                  🛒 Ver Carrito Completo
                 </Link>
               </div>
             )}
           </aside>
 
-          {}
+          {/* LISTA DE PRODUCTOS */}
           <main className="productos-main">
             <div className="productos-header">
               <div className="header-info">
-                <h2>ðŸ“¦ CatÃ¡logo de Repuestos</h2>
+                <h2>📦 Catálogo de Repuestos</h2>
                 <span className="productos-count">({productosFiltrados.length} productos)</span>
               </div>
               <div className="ordenar">
@@ -322,7 +322,7 @@ export default function Catalogo() {
                       }}
                     />
                     {producto.stock < 50 && (
-                      <span className="stock-bajo">Â¡Pocas unidades!</span>
+                      <span className="stock-bajo">¡Pocas unidades!</span>
                     )}
                   </div>
                   <div className="producto-info">
@@ -333,7 +333,7 @@ export default function Catalogo() {
                     >
                       {producto.name}
                     </h3>
-                    <p className="producto-marca">ðŸ­ {producto.brand}</p>
+                    <p className="producto-marca">🏭 {producto.brand}</p>
                     <p className="producto-descripcion">{producto.description}</p>
                     <div className="producto-footer">
                       <div className="precio-stock">
@@ -345,7 +345,7 @@ export default function Catalogo() {
                         onClick={() => agregarAlCarrito(producto)}
                         disabled={producto.stock === 0}
                       >
-                        {producto.stock === 0 ? 'âŒ Agotado' : 'ðŸ›’ Agregar'}
+                        {producto.stock === 0 ? '❌ Agotado' : '🛒 Agregar'}
                       </button>
                     </div>
                   </div>
@@ -355,14 +355,14 @@ export default function Catalogo() {
 
             {productosFiltrados.length === 0 && (
               <div className="no-productos">
-                <div className="no-productos-icon">ðŸ˜”</div>
+                <div className="no-productos-icon">😢</div>
                 <h3>No se encontraron productos</h3>
-                <p>Intenta modificar los filtros de bÃºsqueda</p>
+                <p>Intenta modificar los filtros de búsqueda</p>
                 <button 
                   className="reset-filtros"
                   onClick={() => setFiltros({categoria: '', marca: '', precioMin: '', precioMax: '', busqueda: ''})}
                 >
-                  ðŸ”„ Reiniciar filtros
+                  🔄 Reiniciar filtros
                 </button>
               </div>
             )}
@@ -372,5 +372,3 @@ export default function Catalogo() {
     </div>
   );
 }
-
-
