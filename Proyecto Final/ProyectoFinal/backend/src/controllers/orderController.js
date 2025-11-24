@@ -5,7 +5,8 @@ import { Op } from "sequelize";
 export async function placeOrder(req, res) {
     const t = await sequelize.transaction();
     try {
-        const { shipping_address, payment_method = 'tarjeta' } = req.body;
+        const { shipping_address, payment_method = 'tarjeta' } = req.body;
+
         const cart = await Cart.findOne({ 
             where: { user_id: req.user.id }, 
             include: { 
@@ -16,8 +17,9 @@ export async function placeOrder(req, res) {
 
         if (!cart || !cart.CartItems || cart.CartItems.length === 0) {
             await t.rollback();
-            return res.status(400).json({ error: "Carrito vacÃ­o" });
-        }
+            return res.status(400).json({ error: "Carrito vacío" });
+        }
+
         for (const item of cart.CartItems) {
             if (item.Product.stock < item.cantidad) {
                 await t.rollback();
@@ -25,33 +27,40 @@ export async function placeOrder(req, res) {
                     error: `Stock insuficiente para ${item.Product.nombre}. Stock disponible: ${item.Product.stock}` 
                 });
             }
-        }
+        }
+
         const total = cart.CartItems.reduce((sum, item) => {
             return sum + (parseFloat(item.Product.precio) * item.cantidad);
-        }, 0);
+        }, 0);
+
         const order = await Order.create({ 
             user_id: req.user.id, 
             total: total.toFixed(2), 
             estado: "pendiente"
-        }, { transaction: t });
+        }, { transaction: t });
+
         for (const item of cart.CartItems) {
             await OrderItem.create({ 
                 order_id: order.id, 
                 product_id: item.product_id, 
                 cantidad: item.cantidad, 
                 precio_unitario: item.Product.precio 
-            }, { transaction: t });
+            }, { transaction: t });
+
             item.Product.stock -= item.cantidad;
             await item.Product.save({ transaction: t });
-        }
+        }
+
         await Payment.create({
             order_id: order.id,
             medio: payment_method,
             status: 'pendiente'
-        }, { transaction: t });
+        }, { transaction: t });
+
         await CartItem.destroy({ where: { cart_id: cart.id }, transaction: t });
 
-        await t.commit();
+        await t.commit();
+
         const completeOrder = await Order.findByPk(order.id, {
             include: [
                 {
@@ -91,7 +100,8 @@ export async function listOrders(req, res) {
         
         const offset = (page - 1) * pageSize;
         
-        const where = {};
+        const where = {};
+
         if (req.user.rol === "admin") {
             if (userId) where.user_id = userId;
         } else {
@@ -165,7 +175,8 @@ export async function getOrder(req, res) {
             ]
         });
 
-        if (!order) return res.status(404).json({ error: "Orden no encontrada" });
+        if (!order) return res.status(404).json({ error: "Orden no encontrada" });
+
         if (req.user.rol !== "admin" && order.user_id !== req.user.id) {
             return res.status(403).json({ error: "No autorizado" });
         }
@@ -182,18 +193,20 @@ export async function updateOrderStatus(req, res) {
         const validStates = ['pendiente', 'procesando', 'enviado', 'entregado', 'cancelado'];
 
         if (!estado || !validStates.includes(estado)) {
-            return res.status(400).json({ error: "Estado invÃ¡lido" });
+            return res.status(400).json({ error: "Estado inválido" });
         }
 
         const order = await Order.findByPk(req.params.id);
-        if (!order) return res.status(404).json({ error: "Orden no encontrada" });
+        if (!order) return res.status(404).json({ error: "Orden no encontrada" });
+
         if (req.user.rol !== "admin") {
             return res.status(403).json({ error: "No autorizado" });
         }
 
         const oldStatus = order.estado;
         order.estado = estado;
-        await order.save();
+        await order.save();
+
         if (estado === 'cancelado' && oldStatus !== 'cancelado') {
             const orderItems = await OrderItem.findAll({
                 where: { order_id: order.id },
@@ -213,7 +226,8 @@ export async function updateOrderStatus(req, res) {
 }
 
 export async function getOrderStats(req, res) {
-    try {
+    try {
+
         if (req.user.rol !== "admin") {
             return res.status(403).json({ error: "No autorizado" });
         }
@@ -239,5 +253,3 @@ export async function getOrderStats(req, res) {
         res.status(500).json({ error: "Error interno del servidor" });
     }
 }
-
-

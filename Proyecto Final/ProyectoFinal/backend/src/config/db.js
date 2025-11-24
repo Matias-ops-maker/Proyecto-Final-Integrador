@@ -16,7 +16,8 @@ const sequelize = new Sequelize({
     underscored: true,
     timestamps: true
   },
-  dialectOptions: process.env.DB_DIALECT === 'sqlite' ? {
+  dialectOptions: process.env.DB_DIALECT === 'sqlite' ? {
+
     pragma: {
       foreign_keys: 0
     }
@@ -28,11 +29,10 @@ const testConnection = async () => {
     await sequelize.authenticate();
     return true;
   } catch (error) {
-    console.error('âŒ Error al conectar la DB:', error);
+    console.error('❌ Error al conectar la DB:', error);
     return false;
   }
 };
 
 export { testConnection };
 export default sequelize;
-

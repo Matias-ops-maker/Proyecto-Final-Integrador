@@ -38,26 +38,26 @@ export async function login(req, res) {
         const { email, password } = req.body;
 
         if (!email || !password) {
-            return res.status(400).json({ error: "Email y contraseÃ±a son requeridos" });
+            return res.status(400).json({ error: "Email y contraseña son requeridos" });
         }
 
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
-            return res.status(400).json({ error: "Formato de email invÃ¡lido" });
+            return res.status(400).json({ error: "Formato de email inválido" });
         }
 
         const user = await User.findOne({ where: { email } });
         if (!user) {
-            return res.status(401).json({ error: "Credenciales invÃ¡lidas" });
+            return res.status(401).json({ error: "Credenciales inválidas" });
         }
 
         const ok = await bcryptjs.compare(password, user.password);
         if (!ok) {
-            return res.status(401).json({ error: "Credenciales invÃ¡lidas" });
+            return res.status(401).json({ error: "Credenciales inválidas" });
         }
 
         if (!process.env.JWT_SECRET) {
-            return res.status(500).json({ error: "Error de configuraciÃ³n del servidor" });
+            return res.status(500).json({ error: "Error de configuración del servidor" });
         }
 
         const token = jwt.sign(
@@ -109,7 +109,7 @@ export async function updateProfile(req, res) {
         if (email && email !== user.email) {
             const emailExists = await User.findOne({ where: { email } });
             if (emailExists) {
-                return res.status(400).json({ error: "El email ya estÃ¡ en uso" });
+                return res.status(400).json({ error: "El email ya está en uso" });
             }
         }
 
@@ -140,7 +140,7 @@ export async function changePassword(req, res) {
         const userId = req.user.id;
         
         if (!currentPassword || !newPassword) {
-            return res.status(400).json({ error: "ContraseÃ±a actual y nueva son requeridas" });
+            return res.status(400).json({ error: "Contraseña actual y nueva son requeridas" });
         }
         
         const user = await User.findByPk(userId);
@@ -150,14 +150,14 @@ export async function changePassword(req, res) {
 
         const isValidPassword = await bcryptjs.compare(currentPassword, user.password);
         if (!isValidPassword) {
-            return res.status(400).json({ error: "ContraseÃ±a actual incorrecta" });
+            return res.status(400).json({ error: "Contraseña actual incorrecta" });
         }
 
         const hash = await bcryptjs.hash(newPassword, 10);
         user.password = hash;
         await user.save();
         
-        res.json({ msg: "ContraseÃ±a actualizada exitosamente" });
+        res.json({ msg: "Contraseña actualizada exitosamente" });
     } catch (error) {
         res.status(500).json({ error: "Error interno del servidor" });
     }
@@ -169,7 +169,7 @@ export async function deleteAccount(req, res) {
         const userId = req.user.id;
         
         if (!password) {
-            return res.status(400).json({ error: "ContraseÃ±a es requerida para eliminar la cuenta" });
+            return res.status(400).json({ error: "Contraseña es requerida para eliminar la cuenta" });
         }
         
         const user = await User.findByPk(userId);
@@ -179,7 +179,7 @@ export async function deleteAccount(req, res) {
 
         const isValidPassword = await bcryptjs.compare(password, user.password);
         if (!isValidPassword) {
-            return res.status(400).json({ error: "ContraseÃ±a incorrecta" });
+            return res.status(400).json({ error: "Contraseña incorrecta" });
         }
 
         await user.destroy();
@@ -189,5 +189,3 @@ export async function deleteAccount(req, res) {
         res.status(500).json({ error: "Error interno del servidor" });
     }
 }
-
-

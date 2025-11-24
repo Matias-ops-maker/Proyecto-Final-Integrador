@@ -16,7 +16,7 @@ export async function getCart(req, res) {
             }
         });
 
-        if (!cart) {
+        if (!cart) {
             const newCart = await Cart.create({ user_id: req.user.id });
             return res.json({ 
                 id: newCart.id,
@@ -25,7 +25,8 @@ export async function getCart(req, res) {
                 total: 0,
                 totalItems: 0
             });
-        }
+        }
+
         let total = 0;
         let totalItems = 0;
         
@@ -51,18 +52,21 @@ export async function addToCart(req, res) {
         const { product_id, cantidad = 1 } = req.body;
 
         if (!product_id || cantidad <= 0) {
-            return res.status(400).json({ error: "Product ID y cantidad vÃ¡lida son requeridos" });
-        }
+            return res.status(400).json({ error: "Product ID y cantidad válida son requeridos" });
+        }
+
         const product = await Product.findByPk(product_id);
         if (!product) return res.status(404).json({ error: "Producto no existe" });
         
         if (product.stock < cantidad) {
             return res.status(400).json({ error: "Stock insuficiente" });
-        }
+        }
+
         let cart = await Cart.findOne({ where: { user_id: req.user.id } });
         if (!cart) {
             cart = await Cart.create({ user_id: req.user.id });
-        }
+        }
+
         let cartItem = await CartItem.findOne({ 
             where: { 
                 cart_id: cart.id, 
@@ -70,7 +74,7 @@ export async function addToCart(req, res) {
             } 
         });
 
-        if (cartItem) {
+        if (cartItem) {
             const newQuantity = cartItem.cantidad + cantidad;
             if (product.stock < newQuantity) {
                 return res.status(400).json({ error: "Stock insuficiente" });
@@ -83,9 +87,11 @@ export async function addToCart(req, res) {
                 product_id, 
                 cantidad 
             });
-        }
+        }
+
         cart.actualizado_en = new Date();
-        await cart.save();
+        await cart.save();
+
         const updatedItem = await CartItem.findByPk(cartItem.id, {
             include: {
                 model: Product,
@@ -108,7 +114,7 @@ export async function updateCartItem(req, res) {
         const { cantidad } = req.body;
 
         if (!cantidad || cantidad <= 0) {
-            return res.status(400).json({ error: "Cantidad vÃ¡lida es requerida" });
+            return res.status(400).json({ error: "Cantidad válida es requerida" });
         }
 
         const cartItem = await CartItem.findByPk(id, {
@@ -123,13 +129,15 @@ export async function updateCartItem(req, res) {
 
         if (!cartItem) {
             return res.status(404).json({ error: "Item del carrito no encontrado" });
-        }
+        }
+
         if (cartItem.Product.stock < cantidad) {
             return res.status(400).json({ error: "Stock insuficiente" });
         }
 
         cartItem.cantidad = cantidad;
-        await cartItem.save();
+        await cartItem.save();
+
         cartItem.Cart.actualizado_en = new Date();
         await cartItem.Cart.save();
 
@@ -164,7 +172,8 @@ export async function removeCartItem(req, res) {
             return res.status(404).json({ error: "Item del carrito no encontrado" });
         }
 
-        await cartItem.destroy();
+        await cartItem.destroy();
+
         cartItem.Cart.actualizado_en = new Date();
         await cartItem.Cart.save();
 
@@ -192,5 +201,4 @@ export async function clearCart(req, res) {
         res.status(500).json({ error: "Error interno del servidor" });
     }
 }
-
 

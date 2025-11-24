@@ -81,7 +81,7 @@ import bcryptjs from 'bcryptjs';
         descripcion: 'Filtro de aceite compatible con motores VW/Audi 1.6-2.0 TDI',
         precio: 3500.00,
         costo: 2100.00,
-        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto
+        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto',
         stock: 25,
         estado: 'activo',
         brand_id: mann.id,
@@ -93,7 +93,7 @@ import bcryptjs from 'bcryptjs';
         descripcion: 'Filtro de aire para VW Golf, Polo y Audi A3',
         precio: 2800.00,
         costo: 1680.00,
-        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto
+        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto',
         stock: 30,
         estado: 'activo',
         brand_id: mann.id,
@@ -105,7 +105,7 @@ import bcryptjs from 'bcryptjs';
         descripcion: 'Filtro de combustible para motores diesel',
         precio: 4200.00,
         costo: 2520.00,
-        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto
+        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto',
         stock: 22,
         estado: 'activo',
         brand_id: bosch.id,
@@ -117,7 +117,7 @@ import bcryptjs from 'bcryptjs';
         descripcion: 'Filtro antipolen para máxima pureza del aire',
         precio: 3200.00,
         costo: 1920.00,
-        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto
+        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto',
         stock: 35,
         estado: 'activo',
         brand_id: mahle.id,
@@ -129,7 +129,7 @@ import bcryptjs from 'bcryptjs';
         descripcion: 'Filtro hidráulico para transmisiones automáticas',
         precio: 4800.00,
         costo: 2880.00,
-        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto
+        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto',
         stock: 18,
         estado: 'activo',
         brand_id: mann.id,
@@ -141,7 +141,7 @@ import bcryptjs from 'bcryptjs';
         descripcion: 'Filtro de combustible para motores nafteros',
         precio: 3800.00,
         costo: 2280.00,
-        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto
+        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto',
         stock: 28,
         estado: 'activo',
         brand_id: bosch.id,
@@ -153,7 +153,7 @@ import bcryptjs from 'bcryptjs';
         descripcion: 'Filtro de aire de alto rendimiento',
         precio: 3600.00,
         costo: 2160.00,
-        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto
+        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto',
         stock: 32,
         estado: 'activo',
         brand_id: mahle.id,
@@ -165,7 +165,7 @@ import bcryptjs from 'bcryptjs';
         descripcion: 'Filtro de aceite ecológico biodegradable',
         precio: 4100.00,
         costo: 2460.00,
-        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto
+        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto',
         stock: 26,
         estado: 'activo',
         brand_id: mahle.id,
@@ -178,7 +178,7 @@ import bcryptjs from 'bcryptjs';
         descripcion: 'Pastillas de freno cerámicas para eje delantero',
         precio: 12000.00,
         costo: 7200.00,
-        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto
+        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto',
         stock: 15,
         estado: 'activo',
         brand_id: brembo.id,
@@ -190,7 +190,7 @@ import bcryptjs from 'bcryptjs';
         descripcion: 'Pastillas de freno orgánicas para eje trasero',
         precio: 8500.00,
         costo: 5100.00,
-        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto
+        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto',
         stock: 18,
         estado: 'activo',
         brand_id: ferodo.id,
@@ -202,7 +202,7 @@ import bcryptjs from 'bcryptjs';
         descripcion: 'Disco de freno ventilado 280mm',
         precio: 15800.00,
         costo: 9480.00,
-        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto
+        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto',
         stock: 25,
         estado: 'activo',
         brand_id: brembo.id,
@@ -214,7 +214,7 @@ import bcryptjs from 'bcryptjs';
         descripcion: 'Cilindro de freno para rueda trasera',
         precio: 6800.00,
         costo: 4080.00,
-        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto
+        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto',
         stock: 20,
         estado: 'activo',
         brand_id: ferodo.id,
@@ -226,7 +226,7 @@ import bcryptjs from 'bcryptjs';
         descripcion: 'Zapatas de freno para freno de tambor',
         precio: 7200.00,
         costo: 4320.00,
-        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto
+        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto',
         stock: 16,
         estado: 'activo',
         brand_id: ferodo.id,
@@ -238,7 +238,7 @@ import bcryptjs from 'bcryptjs';
         descripcion: 'Líquido de frenos de alta performance',
         precio: 2800.00,
         costo: 1680.00,
-        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto
+        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto',
         stock: 40,
         estado: 'activo',
         brand_id: castrol.id,
@@ -250,7 +250,7 @@ import bcryptjs from 'bcryptjs';
         descripcion: 'Pastillas de freno cerámicas de alta gama',
         precio: 18500.00,
         costo: 11100.00,
-        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto
+        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto',
         stock: 12,
         estado: 'activo',
         brand_id: brembo.id,
@@ -262,7 +262,7 @@ import bcryptjs from 'bcryptjs';
         descripcion: 'Disco de freno trasero para vehículos compactos',
         precio: 9500.00,
         costo: 5700.00,
-        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto
+        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto',
         stock: 22,
         estado: 'activo',
         brand_id: brembo.id,
@@ -275,7 +275,7 @@ import bcryptjs from 'bcryptjs';
         descripcion: 'Aceite de motor totalmente sintético',
         precio: 8500.00,
         costo: 5100.00,
-        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto
+        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto',
         stock: 50,
         estado: 'activo',
         brand_id: castrol.id,
@@ -287,7 +287,7 @@ import bcryptjs from 'bcryptjs';
         descripcion: 'Aceite semisintético para uso general',
         precio: 5800.00,
         costo: 3480.00,
-        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto
+        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto',
         stock: 45,
         estado: 'activo',
         brand_id: castrol.id,
@@ -299,7 +299,7 @@ import bcryptjs from 'bcryptjs';
         descripcion: 'Fluido para transmisiones automáticas',
         precio: 12500.00,
         costo: 7500.00,
-        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto
+        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto',
         stock: 25,
         estado: 'activo',
         brand_id: liquiMoly.id,
@@ -311,7 +311,7 @@ import bcryptjs from 'bcryptjs';
         descripcion: 'Grasa multiuso para rodamientos y chasís',
         precio: 3200.00,
         costo: 1920.00,
-        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto
+        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto',
         stock: 35,
         estado: 'activo',
         brand_id: liquiMoly.id,
@@ -323,7 +323,7 @@ import bcryptjs from 'bcryptjs';
         descripcion: 'Aceite específico para motores diesel',
         precio: 7200.00,
         costo: 4320.00,
-        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto
+        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto',
         stock: 30,
         estado: 'activo',
         brand_id: castrol.id,
@@ -335,7 +335,7 @@ import bcryptjs from 'bcryptjs';
         descripcion: 'Aditivo para limpieza interna del motor',
         precio: 4500.00,
         costo: 2700.00,
-        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto
+        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto',
         stock: 28,
         estado: 'activo',
         brand_id: liquiMoly.id,
@@ -347,7 +347,7 @@ import bcryptjs from 'bcryptjs';
         descripcion: 'Líquido refrigerante concentrado G12++',
         precio: 3800.00,
         costo: 2280.00,
-        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto
+        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto',
         stock: 42,
         estado: 'activo',
         brand_id: liquiMoly.id,
@@ -359,7 +359,7 @@ import bcryptjs from 'bcryptjs';
         descripcion: 'Aceite para cajas manuales y diferenciales',
         precio: 9800.00,
         costo: 5880.00,
-        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto
+        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto',
         stock: 20,
         estado: 'activo',
         brand_id: castrol.id,
@@ -372,7 +372,7 @@ import bcryptjs from 'bcryptjs';
         descripcion: 'Bujías de iridio para máximo rendimiento',
         precio: 8500.00,
         costo: 5100.00,
-        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto
+        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto',
         stock: 24,
         estado: 'activo',
         brand_id: ngk.id,
@@ -384,7 +384,7 @@ import bcryptjs from 'bcryptjs';
         descripcion: 'Juego de cables de alta tensión',
         precio: 12000.00,
         costo: 7200.00,
-        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto
+        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto',
         stock: 18,
         estado: 'activo',
         brand_id: ngk.id,
@@ -396,7 +396,7 @@ import bcryptjs from 'bcryptjs';
         descripcion: 'Bobina de encendido para motores modernos',
         precio: 15800.00,
         costo: 9480.00,
-        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto
+        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto',
         stock: 15,
         estado: 'activo',
         brand_id: bosch.id,
@@ -408,7 +408,7 @@ import bcryptjs from 'bcryptjs';
         descripcion: 'Distribuidor con tapa y rotor incluido',
         precio: 28500.00,
         costo: 17100.00,
-        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto
+        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto',
         stock: 8,
         estado: 'activo',
         brand_id: bosch.id,
@@ -420,7 +420,7 @@ import bcryptjs from 'bcryptjs';
         descripcion: 'Sensor CKP para sistema de inyección',
         precio: 8900.00,
         costo: 5340.00,
-        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto
+        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto',
         stock: 12,
         estado: 'activo',
         brand_id: bosch.id,
@@ -432,7 +432,7 @@ import bcryptjs from 'bcryptjs';
         descripcion: 'Módulo de control de encendido',
         precio: 24000.00,
         costo: 14400.00,
-        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto
+        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto',
         stock: 6,
         estado: 'activo',
         brand_id: bosch.id,
@@ -444,7 +444,7 @@ import bcryptjs from 'bcryptjs';
         descripcion: 'Bujías estándar para motores carburados',
         precio: 2800.00,
         costo: 1680.00,
-        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto
+        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto',
         stock: 50,
         estado: 'activo',
         brand_id: ngk.id,
@@ -456,7 +456,7 @@ import bcryptjs from 'bcryptjs';
         descripcion: 'Condensador para sistemas clásicos',
         precio: 1500.00,
         costo: 900.00,
-        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto
+        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto',
         stock: 30,
         estado: 'activo',
         brand_id: bosch.id,
@@ -469,7 +469,7 @@ import bcryptjs from 'bcryptjs';
         descripcion: 'Correa de distribución reforzada',
         precio: 8500.00,
         costo: 5100.00,
-        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto
+        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto',
         stock: 20,
         estado: 'activo',
         brand_id: gates.id,
@@ -481,7 +481,7 @@ import bcryptjs from 'bcryptjs';
         descripcion: 'Kit con correa, tensores y bomba de agua',
         precio: 28000.00,
         costo: 16800.00,
-        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto
+        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto',
         stock: 10,
         estado: 'activo',
         brand_id: gates.id,
@@ -493,7 +493,7 @@ import bcryptjs from 'bcryptjs';
         descripcion: 'Kit de embrague disco, plato y collarin',
         precio: 45000.00,
         costo: 27000.00,
-        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto
+        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto',
         stock: 8,
         estado: 'activo',
         brand_id: mahle.id,
@@ -505,7 +505,7 @@ import bcryptjs from 'bcryptjs';
         descripcion: 'Correa de accesorios multicanal',
         precio: 4200.00,
         costo: 2520.00,
-        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto
+        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto',
         stock: 25,
         estado: 'activo',
         brand_id: gates.id,
@@ -517,7 +517,7 @@ import bcryptjs from 'bcryptjs';
         descripcion: 'Tensor automático para correa de accesorios',
         precio: 12500.00,
         costo: 7500.00,
-        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto
+        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto',
         stock: 15,
         estado: 'activo',
         brand_id: gates.id,
@@ -529,7 +529,7 @@ import bcryptjs from 'bcryptjs';
         descripcion: 'Collarín de embrague de liberación',
         precio: 8900.00,
         costo: 5340.00,
-        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto
+        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto',
         stock: 18,
         estado: 'activo',
         brand_id: mahle.id,
@@ -541,7 +541,7 @@ import bcryptjs from 'bcryptjs';
         descripcion: 'Bomba de agua con junta incluida',
         precio: 15600.00,
         costo: 9360.00,
-        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto
+        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto',
         stock: 12,
         estado: 'activo',
         brand_id: gates.id,
@@ -553,7 +553,7 @@ import bcryptjs from 'bcryptjs';
         descripcion: 'Cadena de distribución para motores TSI',
         precio: 18500.00,
         costo: 11100.00,
-        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto
+        imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto',
         stock: 8,
         estado: 'activo',
         brand_id: mahle.id,

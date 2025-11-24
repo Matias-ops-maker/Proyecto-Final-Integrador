@@ -6,21 +6,21 @@ export async function salesPdf(req, res) {
         const salesData = [
             { 
                 fecha: "2024-10-01", 
-                cliente: "Juan PÃ©rez", 
+                cliente: "Juan Pérez", 
                 productos: "Filtro de aceite, Pastillas de freno", 
                 total: 45000,
                 estado: "Entregado"
             },
             { 
                 fecha: "2024-10-02", 
-                cliente: "MarÃ­a GarcÃ­a", 
+                cliente: "María García", 
                 productos: "Aceite motor 5W-30", 
                 total: 28000,
                 estado: "En proceso"
             },
             { 
                 fecha: "2024-10-03", 
-                cliente: "Carlos LÃ³pez", 
+                cliente: "Carlos López", 
                 productos: "Amortiguador Monroe", 
                 total: 12500,
                 estado: "Pendiente"
@@ -50,7 +50,7 @@ export async function salesPdf(req, res) {
         const totalVentas = salesData.reduce((sum, order) => sum + order.total, 0);
         doc.moveDown(1);
         doc.fontSize(14).text(`Total de ventas: $${totalVentas.toFixed(2)}`);
-        doc.text(`NÃºmero de Ã³rdenes: ${salesData.length}`);
+        doc.text(`Número de órdenes: ${salesData.length}`);
 
         doc.end();
 
@@ -64,21 +64,21 @@ export async function salesXlsx(req, res) {
         const salesData = [
             { 
                 fecha: "2024-10-01", 
-                cliente: "Juan PÃ©rez", 
+                cliente: "Juan Pérez", 
                 productos: "Filtro de aceite, Pastillas de freno", 
                 total: 45000,
                 estado: "Entregado"
             },
             { 
                 fecha: "2024-10-02", 
-                cliente: "MarÃ­a GarcÃ­a", 
+                cliente: "María García", 
                 productos: "Aceite motor 5W-30", 
                 total: 28000,
                 estado: "En proceso"
             },
             { 
                 fecha: "2024-10-03", 
-                cliente: "Carlos LÃ³pez", 
+                cliente: "Carlos López", 
                 productos: "Amortiguador Monroe", 
                 total: 12500,
                 estado: "Pendiente"
@@ -139,7 +139,7 @@ export async function inventoryPdf(req, res) {
                 estado: "Disponible"
             },
             { 
-                nombre: "Aceite motor 5W-30 sintÃ©tico 1L", 
+                nombre: "Aceite motor 5W-30 sintético 1L", 
                 categoria: "Lubricantes",
                 marca: "Mobil 1",
                 precio: 28000,
@@ -161,7 +161,7 @@ export async function inventoryPdf(req, res) {
 
         inventoryData.forEach((product, index) => {
             doc.text(`${index + 1}. Producto: ${product.nombre}`);
-            doc.text(`   CategorÃ­a: ${product.categoria}`);
+            doc.text(`   Categoría: ${product.categoria}`);
             doc.text(`   Marca: ${product.marca}`);
             doc.text(`   Precio: $${product.precio.toFixed(2)}`);
             doc.text(`   Stock: ${product.stock} unidades`);
@@ -206,7 +206,7 @@ export async function inventoryXlsx(req, res) {
                 estado: "Disponible"
             },
             { 
-                nombre: "Aceite motor 5W-30 sintÃ©tico 1L", 
+                nombre: "Aceite motor 5W-30 sintético 1L", 
                 categoria: "Lubricantes",
                 marca: "Mobil 1",
                 precio: 28000,
@@ -220,7 +220,7 @@ export async function inventoryXlsx(req, res) {
 
         worksheet.columns = [
             { header: "Producto", key: "nombre", width: 40 },
-            { header: "CategorÃ­a", key: "categoria", width: 20 },
+            { header: "Categoría", key: "categoria", width: 20 },
             { header: "Marca", key: "marca", width: 20 },
             { header: "Precio", key: "precio", width: 15 },
             { header: "Stock", key: "stock", width: 10 },
@@ -252,7 +252,8 @@ export async function inventoryXlsx(req, res) {
 }
 
 export async function dashboardStats(req, res) {
-    try {
+    try {
+
         const stats = {
             totalVentas: 175000,
             ventasMes: 95000,
@@ -262,19 +263,19 @@ export async function dashboardStats(req, res) {
             ventasRecientes: [
                 { 
                     fecha: "2024-10-01", 
-                    cliente: "Juan PÃ©rez", 
+                    cliente: "Juan Pérez", 
                     total: 45000,
                     estado: "Entregado"
                 },
                 { 
                     fecha: "2024-10-02", 
-                    cliente: "MarÃ­a GarcÃ­a", 
+                    cliente: "María García", 
                     total: 28000,
                     estado: "En proceso"
                 },
                 { 
                     fecha: "2024-10-03", 
-                    cliente: "Carlos LÃ³pez", 
+                    cliente: "Carlos López", 
                     total: 12500,
                     estado: "Pendiente"
                 }
@@ -292,5 +293,3 @@ export async function dashboardStats(req, res) {
         res.status(500).json({ error: "Error interno del servidor" });
     }
 }
-
-

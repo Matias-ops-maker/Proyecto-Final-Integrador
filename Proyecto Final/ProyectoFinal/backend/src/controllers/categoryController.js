@@ -5,7 +5,8 @@ export async function listCategories(req, res) {
     try {
         const { includeHierarchy = false } = req.query;
         
-        if (includeHierarchy === 'true') {
+        if (includeHierarchy === 'true') {
+
             const categories = await Category.findAll({
                 include: [
                     {
@@ -27,7 +28,8 @@ export async function listCategories(req, res) {
                 order: [['nombre', 'ASC']]
             });
             res.json(categories);
-        } else {
+        } else {
+
             const categories = await Category.findAll({
                 include: [
                     {
@@ -66,7 +68,7 @@ export async function getCategory(req, res) {
             ]
         });
 
-        if (!category) return res.status(404).json({ error: "CategorÃ­a no encontrada" });
+        if (!category) return res.status(404).json({ error: "Categoría no encontrada" });
         res.json(category);
     } catch (error) {
         res.status(500).json({ error: "Error interno del servidor" });
@@ -78,14 +80,16 @@ export async function createCategory(req, res) {
         const { nombre, descripcion, parent_id } = req.body;
 
         if (!nombre) {
-            return res.status(400).json({ error: "El nombre de la categorÃ­a es requerido" });
-        }
+            return res.status(400).json({ error: "El nombre de la categoría es requerido" });
+        }
+
         if (parent_id) {
             const parentCategory = await Category.findByPk(parent_id);
             if (!parentCategory) {
-                return res.status(400).json({ error: "La categorÃ­a padre no existe" });
+                return res.status(400).json({ error: "La categoría padre no existe" });
             }
-        }
+        }
+
         const existingCategory = await Category.findOne({ 
             where: { 
                 nombre,
@@ -93,10 +97,11 @@ export async function createCategory(req, res) {
             } 
         });
         if (existingCategory) {
-            return res.status(400).json({ error: "La categorÃ­a ya existe" });
+            return res.status(400).json({ error: "La categoría ya existe" });
         }
 
-        const category = await Category.create({ nombre, descripcion, parent_id });
+        const category = await Category.create({ nombre, descripcion, parent_id });
+
         const newCategory = await Category.findByPk(category.id, {
             include: [
                 {
@@ -116,19 +121,21 @@ export async function createCategory(req, res) {
 export async function updateCategory(req, res) {
     try {
         const category = await Category.findByPk(req.params.id);
-        if (!category) return res.status(404).json({ error: "CategorÃ­a no encontrada" });
+        if (!category) return res.status(404).json({ error: "Categoría no encontrada" });
 
-        const { nombre, parent_id } = req.body;
+        const { nombre, parent_id } = req.body;
+
         if (parent_id && parent_id !== category.parent_id) {
             if (parent_id === category.id) {
-                return res.status(400).json({ error: "Una categorÃ­a no puede ser padre de sÃ­ misma" });
+                return res.status(400).json({ error: "Una categoría no puede ser padre de sí misma" });
             }
             
             const parentCategory = await Category.findByPk(parent_id);
             if (!parentCategory) {
-                return res.status(400).json({ error: "La categorÃ­a padre no existe" });
+                return res.status(400).json({ error: "La categoría padre no existe" });
             }
-        }
+        }
+
         if (nombre && nombre !== category.nombre) {
             const existingCategory = await Category.findOne({ 
                 where: { 
@@ -138,11 +145,12 @@ export async function updateCategory(req, res) {
                 } 
             });
             if (existingCategory) {
-                return res.status(400).json({ error: "El nombre de categorÃ­a ya existe" });
+                return res.status(400).json({ error: "El nombre de categoría ya existe" });
             }
         }
 
-        await category.update(req.body);
+        await category.update(req.body);
+
         const updatedCategory = await Category.findByPk(category.id, {
             include: [
                 {
@@ -162,25 +170,25 @@ export async function updateCategory(req, res) {
 export async function deleteCategory(req, res) {
     try {
         const category = await Category.findByPk(req.params.id);
-        if (!category) return res.status(404).json({ error: "CategorÃ­a no encontrada" });
+        if (!category) return res.status(404).json({ error: "Categoría no encontrada" });
+
         const productCount = await Product.count({ where: { category_id: category.id } });
         if (productCount > 0) {
             return res.status(400).json({ 
-                error: "No se puede eliminar la categorÃ­a porque tiene productos asociados" 
+                error: "No se puede eliminar la categoría porque tiene productos asociados" 
             });
-        }
+        }
+
         const subcategoryCount = await Category.count({ where: { parent_id: category.id } });
         if (subcategoryCount > 0) {
             return res.status(400).json({ 
-                error: "No se puede eliminar la categorÃ­a porque tiene subcategorÃ­as" 
+                error: "No se puede eliminar la categoría porque tiene subcategorías" 
             });
         }
 
         await category.destroy();
-        res.json({ msg: "CategorÃ­a eliminada exitosamente" });
+        res.json({ msg: "Categoría eliminada exitosamente" });
     } catch (error) {
         res.status(500).json({ error: "Error interno del servidor" });
     }
 }
-
-

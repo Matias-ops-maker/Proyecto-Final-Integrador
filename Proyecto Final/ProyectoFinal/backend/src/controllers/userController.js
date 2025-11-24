@@ -3,7 +3,8 @@ import { Op } from "sequelize";
 import bcryptjs from "bcryptjs";
 
 export async function listUsers(req, res) {
-    try {
+    try {
+
         if (req.user.rol !== "admin") {
             return res.status(403).json({ error: "No autorizado" });
         }
@@ -51,7 +52,8 @@ export async function listUsers(req, res) {
 
 export async function getUser(req, res) {
     try {
-        const { id } = req.params;
+        const { id } = req.params;
+
         if (req.user.rol !== "admin" && req.user.id != id) {
             return res.status(403).json({ error: "No autorizado" });
         }
@@ -79,19 +81,23 @@ export async function getUser(req, res) {
 }
 
 export async function createUser(req, res) {
-    try {
+    try {
+
         if (req.user.rol !== "admin") {
             return res.status(403).json({ error: "No autorizado" });
         }
 
-        const { nombre, email, password, rol = 'user' } = req.body;
+        const { nombre, email, password, rol = 'user' } = req.body;
+
         if (!nombre || !email || !password) {
             return res.status(400).json({ error: "Todos los campos son requeridos" });
-        }
+        }
+
         const existingUser = await User.findOne({ where: { email } });
         if (existingUser) {
-            return res.status(400).json({ error: "El email ya estÃ¡ registrado" });
-        }
+            return res.status(400).json({ error: "El email ya está registrado" });
+        }
+
         const hashedPassword = await bcryptjs.hash(password, 10);
 
         const user = await User.create({
@@ -117,7 +123,8 @@ export async function createUser(req, res) {
 export async function updateUser(req, res) {
     try {
         const { id } = req.params;
-        const { nombre, email, rol } = req.body;
+        const { nombre, email, rol } = req.body;
+
         if (req.user.rol !== "admin" && req.user.id != id) {
             return res.status(403).json({ error: "No autorizado" });
         }
@@ -125,13 +132,15 @@ export async function updateUser(req, res) {
         const user = await User.findByPk(id);
         if (!user) {
             return res.status(404).json({ error: "Usuario no encontrado" });
-        }
+        }
+
         if (email && email !== user.email) {
             const existingUser = await User.findOne({ where: { email } });
             if (existingUser) {
-                return res.status(400).json({ error: "El email ya estÃ¡ en uso" });
+                return res.status(400).json({ error: "El email ya está en uso" });
             }
-        }
+        }
+
         const updateData = { nombre, email };
         if (req.user.rol === "admin" && rol) {
             updateData.rol = rol;
@@ -154,10 +163,12 @@ export async function updateUser(req, res) {
 
 export async function deleteUser(req, res) {
     try {
-        const { id } = req.params;
+        const { id } = req.params;
+
         if (req.user.rol !== "admin") {
             return res.status(403).json({ error: "No autorizado" });
-        }
+        }
+
         if (req.user.id == id) {
             return res.status(400).json({ error: "No puedes eliminar tu propio usuario" });
         }
@@ -165,11 +176,12 @@ export async function deleteUser(req, res) {
         const user = await User.findByPk(id);
         if (!user) {
             return res.status(404).json({ error: "Usuario no encontrado" });
-        }
+        }
+
         const orderCount = await Order.count({ where: { user_id: id } });
         if (orderCount > 0) {
             return res.status(400).json({ 
-                error: "No se puede eliminar el usuario porque tiene Ã³rdenes asociadas" 
+                error: "No se puede eliminar el usuario porque tiene órdenes asociadas" 
             });
         }
 
@@ -184,28 +196,28 @@ export async function deleteUser(req, res) {
 export async function resetUserPassword(req, res) {
     try {
         const { id } = req.params;
-        const { newPassword } = req.body;
+        const { newPassword } = req.body;
+
         if (req.user.rol !== "admin") {
             return res.status(403).json({ error: "No autorizado" });
         }
 
         if (!newPassword) {
-            return res.status(400).json({ error: "Nueva contraseÃ±a es requerida" });
+            return res.status(400).json({ error: "Nueva contraseña es requerida" });
         }
 
         const user = await User.findByPk(id);
         if (!user) {
             return res.status(404).json({ error: "Usuario no encontrado" });
-        }
+        }
+
         const hashedPassword = await bcryptjs.hash(newPassword, 10);
         user.password = hashedPassword;
         await user.save();
 
-        res.json({ msg: "ContraseÃ±a restablecida exitosamente" });
+        res.json({ msg: "Contraseña restablecida exitosamente" });
 
     } catch (error) {
         res.status(500).json({ error: "Error interno del servidor" });
     }
 }
-
-

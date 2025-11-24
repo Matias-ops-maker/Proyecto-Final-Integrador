@@ -66,7 +66,7 @@ export async function getProduct(req, res) {
                 {
                     model: Vehicle,
                     through: { attributes: [] },
-                    attributes: ['id', 'marca', 'modelo', 'aÃ±o_desde', 'aÃ±o_hasta', 'motor']
+                    attributes: ['id', 'marca', 'modelo', 'año_desde', 'año_hasta', 'motor']
                 }
             ]
         });
@@ -92,10 +92,12 @@ export async function createProduct(req, res) {
             brand_id, 
             category_id,
             vehicles = []
-        } = req.body;
+        } = req.body;
+
         if (!sku || !nombre || !precio || !category_id) {
-            return res.status(400).json({ error: "SKU, nombre, precio y categorÃ­a son requeridos" });
-        }
+            return res.status(400).json({ error: "SKU, nombre, precio y categorí­a son requeridos" });
+        }
+
         const existingSku = await Product.findOne({ where: { sku } });
         if (existingSku) {
             return res.status(400).json({ error: "El SKU ya existe" });
@@ -112,14 +114,16 @@ export async function createProduct(req, res) {
             estado, 
             brand_id, 
             category_id 
-        });
+        });
+
         if (vehicles.length > 0) {
             const fitments = vehicles.map(vehicle_id => ({
                 product_id: prod.id,
                 vehicle_id
             }));
             await Fitment.bulkCreate(fitments);
-        }
+        }
+
         const newProduct = await Product.findByPk(prod.id, {
             include: [
                 { model: Category, attributes: ['id', 'nombre'] },
@@ -138,7 +142,8 @@ export async function updateProduct(req, res) {
         const prod = await Product.findByPk(req.params.id);
         if (!prod) return res.status(404).json({ error: "Producto no encontrado" });
 
-        const { vehicles, ...updateData } = req.body;
+        const { vehicles, ...updateData } = req.body;
+
         if (updateData.sku && updateData.sku !== prod.sku) {
             const existingSku = await Product.findOne({ where: { sku: updateData.sku } });
             if (existingSku) {
@@ -146,9 +151,12 @@ export async function updateProduct(req, res) {
             }
         }
 
-        await prod.update(updateData);
-        if (vehicles) {
-            await Fitment.destroy({ where: { product_id: prod.id } });
+        await prod.update(updateData);
+
+        if (vehicles) {
+
+            await Fitment.destroy({ where: { product_id: prod.id } });
+
             if (vehicles.length > 0) {
                 const fitments = vehicles.map(vehicle_id => ({
                     product_id: prod.id,
@@ -156,7 +164,8 @@ export async function updateProduct(req, res) {
                 }));
                 await Fitment.bulkCreate(fitments);
             }
-        }
+        }
+
         const updatedProduct = await Product.findByPk(prod.id, {
             include: [
                 { model: Category, attributes: ['id', 'nombre'] },
@@ -173,7 +182,8 @@ export async function updateProduct(req, res) {
 export async function deleteProduct(req, res) {
     try {
         const prod = await Product.findByPk(req.params.id);
-        if (!prod) return res.status(404).json({ error: "Producto no encontrado" });
+        if (!prod) return res.status(404).json({ error: "Producto no encontrado" });
+
         await Fitment.destroy({ where: { product_id: prod.id } });
         
         await prod.destroy();

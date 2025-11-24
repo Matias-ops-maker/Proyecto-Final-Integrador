@@ -8,14 +8,13 @@ async function migrate() {
     await sequelize.authenticate();
     await syncModels();
     await sequelize.close();
-    } catch (error) {
+  } catch (error) {
     process.exit(1);
   }
 }
 
-if (import.meta.url === `file:
+if (import.meta.url === `file://${process.argv[1]}`) {
   migrate();
 }
 
 export default migrate;
-
