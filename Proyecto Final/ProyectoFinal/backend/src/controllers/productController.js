@@ -29,8 +29,11 @@ export async function listProducts(req, res) {
         if (category_id) filtros.category_id = category_id;
         if (brand_id) filtros.brand_id = brand_id;
         if (inStock === "true") filtros.stock = { [Op.gt]: 0 };
-        if (minPrice) filtros.precio = { ...filtros.precio, [Op.gte]: parseFloat(minPrice) };
-        if (maxPrice) filtros.precio = { ...filtros.precio, [Op.lte]: parseFloat(maxPrice) };
+        if (minPrice || maxPrice) {
+            filtros.precio = {};
+            if (minPrice) filtros.precio[Op.gte] = parseFloat(minPrice);
+            if (maxPrice) filtros.precio[Op.lte] = parseFloat(maxPrice);
+        }
 
         const { rows, count } = await Product.findAndCountAll({
             where: filtros,
@@ -59,6 +62,8 @@ export async function listProducts(req, res) {
 
 export async function getProduct(req, res) {
     try {
+        console.log('📍 Iniciando getProduct para ID:', req.params.id);
+        
         const prod = await Product.findByPk(req.params.id, { 
             include: [
                 { model: Category, attributes: ['id', 'nombre'] },
@@ -66,15 +71,21 @@ export async function getProduct(req, res) {
                 {
                     model: Vehicle,
                     through: { attributes: [] },
-                    attributes: ['id', 'marca', 'modelo', 'año_desde', 'año_hasta', 'motor']
+                    attributes: ['id', 'marca', 'modelo', 'ano_desde', 'ano_hasta', 'motor']
                 }
             ]
         });
         
+        console.log('📍 Producto encontrado:', prod ? 'Sí' : 'No');
+        
         if (!prod) return res.status(404).json({ error: "Producto no encontrado" });
+        
+        console.log('📍 Enviando respuesta JSON');
         res.json(prod);
     } catch (error) {
-        res.status(500).json({ error: "Error interno del servidor" });
+        console.error('❌ Error en getProduct:', error.message);
+        console.error(error.stack);
+        res.status(500).json({ error: "Error interno del servidor", details: error.message });
     }
 }
 

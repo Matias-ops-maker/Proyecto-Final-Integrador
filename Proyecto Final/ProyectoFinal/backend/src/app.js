@@ -59,27 +59,35 @@ app.use((req, res) => {
 const PORT = process.env.PORT || 4000;
 
 process.on('uncaughtException', (error) => {
-  
+  console.error('Uncaught Exception:', error);
 });
 
 process.on('unhandledRejection', (reason, promise) => {
-  
+  console.error('Unhandled Rejection:', reason);
 });
 
 (async () => {
   try {
     await sequelize.authenticate();
+    console.log('✅ Conexión a la base de datos establecida');
+    
     if (process.env.NODE_ENV !== 'production') {
       await sequelize.sync({ force: false });
-      }
+      console.log('✅ Modelos sincronizados');
+    }
 
     const server = app.listen(PORT, () => {
-      });
+      console.log(`🚀 Servidor corriendo en puerto ${PORT}`);
+      console.log(`🌐 API disponible en http://localhost:${PORT}/api`);
+    });
 
     server.on('error', (error) => {
-      });
+      console.error('❌ Error al iniciar el servidor:', error);
+      process.exit(1);
+    });
 
   } catch (err) {
+    console.error('❌ Error fatal:', err);
     process.exit(1);
   }
 })();
