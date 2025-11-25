@@ -153,7 +153,7 @@ export default function ProductoDetalle() {
 
           <div className="producto-info-detalle">
             <div className="producto-header">
-              <span className="producto-categoria">{producto.category}</span>
+              <span className="producto-categoria">{producto.Category?.nombre || 'Sin categoría'}</span>
               <h1>{producto.nombre}</h1>
               <p className="producto-marca">{producto.Brand?.nombre || 'Sin marca'}</p>
             </div>
@@ -174,7 +174,7 @@ export default function ProductoDetalle() {
               <p>{producto.descripcion}</p>
             </div>
 
-            {producto.especificaciones && (
+            {Array.isArray(producto.especificaciones) && producto.especificaciones.length > 0 && (
               <div className="producto-especificaciones">
                 <h3>Especificaciones</h3>
                 <ul>
@@ -185,12 +185,12 @@ export default function ProductoDetalle() {
               </div>
             )}
 
-            {producto.garantia && (
+            {producto.garantia ? (
               <div className="producto-garantia">
                 <h3>Garantía</h3>
                 <p>{producto.garantia}</p>
               </div>
-            )}
+            ) : null}
 
             <div className="producto-compra">
               <div className="cantidad-selector">

@@ -25,6 +25,11 @@ app.use(cors({
 }));
 app.use(express.json());
 
+app.use((req, res, next) => {
+  console.log(`📥 ${req.method} ${req.path}`);
+  next();
+});
+
 app.use(checkApiKey);
 
 app.use('/api/auth', authRoutes);
@@ -59,11 +64,13 @@ app.use((req, res) => {
 const PORT = process.env.PORT || 4000;
 
 process.on('uncaughtException', (error) => {
-  console.error('Uncaught Exception:', error);
+  console.error('❌ Uncaught Exception:', error);
+  console.error('Stack:', error.stack);
 });
 
 process.on('unhandledRejection', (reason, promise) => {
-  console.error('Unhandled Rejection:', reason);
+  console.error('❌ Unhandled Rejection:', reason);
+  console.error('Promise:', promise);
 });
 
 (async () => {
