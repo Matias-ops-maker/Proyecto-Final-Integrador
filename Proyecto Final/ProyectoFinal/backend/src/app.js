@@ -73,30 +73,34 @@ process.on('unhandledRejection', (reason, promise) => {
   console.error('Promise:', promise);
 });
 
-(async () => {
-  try {
-    await sequelize.authenticate();
-    console.log('✅ Conexión a la base de datos establecida');
-    
-    if (process.env.NODE_ENV !== 'production') {
-      await sequelize.sync({ force: false });
-      console.log('✅ Modelos sincronizados');
-    }
+if (process.env.NODE_ENV !== 'test') {
+  (async () => {
+    try {
+      await sequelize.authenticate();
+      console.log('✅ Conexión a la base de datos establecida');
 
-    const server = app.listen(PORT, () => {
-      console.log(`🚀 Servidor corriendo en puerto ${PORT}`);
-      console.log(`🌐 API disponible en http://localhost:${PORT}/api`);
-    });
+      if (process.env.NODE_ENV !== 'production') {
+        await sequelize.sync({ force: false });
+        console.log('✅ Modelos sincronizados');
+      }
 
-    server.on('error', (error) => {
-      console.error('❌ Error al iniciar el servidor:', error);
+      const server = app.listen(PORT, () => {
+        console.log(`🚀 Servidor corriendo en puerto ${PORT}`);
+        console.log(`🌐 API disponible en http://localhost:${PORT}/api`);
+      });
+
+      server.on('error', (error) => {
+        console.error('❌ Error al iniciar el servidor:', error);
+        process.exit(1);
+      });
+
+    } catch (err) {
+      console.error('❌ Error fatal:', err);
       process.exit(1);
-    });
+    }
+  })();
+}
 
-  } catch (err) {
-    console.error('❌ Error fatal:', err);
-    process.exit(1);
-  }
-})();
+export default app;
 
 

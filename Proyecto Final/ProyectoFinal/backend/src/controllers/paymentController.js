@@ -1,40 +1,13 @@
-﻿import { MercadoPagoConfig, Preference } from 'mercadopago';
-
-const client = new MercadoPagoConfig({ 
-  accessToken: process.env.MP_ACCESS_TOKEN,
-  options: { timeout: 5000 }
-});
-
-const preference = new Preference(client);
+﻿import PaymentService from '../services/paymentService.js';
+import { validateCreatePayment } from '../services/validators/paymentValidator.js';
 
 export async function createPayment(req, res) {
   try {
+    const { valid, errors } = validateCreatePayment(req.body);
+    if (!valid) return res.status(400).json({ errors });
+
     const { items, payer, back_urls, external_reference, notification_url, metadata } = req.body;
-    
-    if (!items || items.length === 0) {
-      return res.status(400).json({
-        success: false,
-        message: 'No hay items en el carrito'
-      });
-    }
-
-    const body = {
-      items: items,
-      payer: payer,
-      back_urls: back_urls,
-      auto_return: 'approved',
-      external_reference: external_reference,
-      notification_url: notification_url,
-      statement_descriptor: 'RepuestosAuto',
-      metadata: metadata || {},
-      expires: true,
-      expiration_date_from: new Date().toISOString(),
-      expiration_date_to: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() 
-    };
-
-    console.log('Creating payment preference with data:', JSON.stringify(body, null, 2));
-
-    const response = await preference.create({ body });
+    const response = await PaymentService.createPayment(items, payer, back_urls, external_reference, notification_url, metadata);
     
     res.json({
       success: true,
@@ -43,6 +16,8 @@ export async function createPayment(req, res) {
       sandbox_init_point: response.sandbox_init_point
     });
   } catch (error) {
+    if (error.code === 'NO_ITEMS') return res.status(400).json({ success: false, message: 'No hay items en el carrito' });
+    console.error('❌ Error en createPayment:', error);
     res.status(500).json({
       success: false,
       message: 'Error al crear la preferencia de pago',
@@ -55,13 +30,10 @@ export async function createPayment(req, res) {
 export async function paymentWebhook(req, res) {
   try {
     const { type, data } = req.body;
-    
-    if (type === 'payment') {
-      const paymentId = data.id;
-      }
-    
+    await PaymentService.handleWebhook(type, data);
     res.status(200).send('OK');
   } catch (error) {
+    console.error('❌ Error en paymentWebhook:', error);
     res.status(500).send('Error');
   }
 }
@@ -69,7 +41,6 @@ export async function paymentWebhook(req, res) {
 export async function getPaymentStatus(req, res) {
   try {
     const { paymentId } = req.params;
-
     res.json({
       payment_id: paymentId,
       status: 'approved',
@@ -77,6 +48,7 @@ export async function getPaymentStatus(req, res) {
       payment_method: 'credit_card'
     });
   } catch (error) {
+    console.error('❌ Error en getPaymentStatus:', error);
     res.status(500).json({
       success: false,
       message: 'Error al obtener el estado del pago'
