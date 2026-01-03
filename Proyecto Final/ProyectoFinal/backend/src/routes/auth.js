@@ -1,10 +1,13 @@
 ﻿import express from "express";
-import { register, login, getProfile, updateProfile, changePassword, deleteAccount } from "../controllers/authController.js";
+import { register, login, getProfile, updateProfile, changePassword, deleteAccount, refreshToken } from "../controllers/authController.js";
 import { verifyToken } from "../middlewares/auth.js";
 
-const router = express.Router();
+const router = express.Router();
+
 router.post("/register", register);
-router.post("/login", login);
+router.post("/login", login);
+router.post("/refresh", verifyToken, refreshToken);
+
 router.get("/profile", verifyToken, getProfile);
 router.put("/profile", verifyToken, updateProfile);
 router.put("/change-password", verifyToken, changePassword);

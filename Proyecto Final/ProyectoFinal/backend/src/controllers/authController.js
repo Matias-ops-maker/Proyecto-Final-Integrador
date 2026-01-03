@@ -1,191 +1,128 @@
-﻿import bcryptjs from "bcryptjs";
-import jwt from "jsonwebtoken";
-import { User, Cart } from "../models/index.js";
+﻿import { AuthService } from "../services/authService.js";
+import { UserService } from "../services/userService.js";
+import { ApiResponse } from "../helpers/apiHelpers.js";
 
 export async function register(req, res) {
     try {
-        const { nombre, email, password, rol = 'user' } = req.body;
+        const result = await AuthService.register(req.body);
 
-        if (!nombre || !email || !password) {
-            return res.status(400).json({ error: "Todos los campos son requeridos" });
+        if (result.error) {
+            const statusCode = result.error.code === 'EMAIL_EXISTS' ? 400 : 400;
+            return ApiResponse.error(res, statusCode, result.error.message);
         }
 
-        const exist = await User.findOne({ where: { email } });
-        if (exist) return res.status(400).json({ error: "Email ya registrado" });
-
-        const hash = await bcryptjs.hash(password, 10);
-
-        const user = await User.create({ nombre, email, password: hash, rol });
-
-        await Cart.create({ user_id: user.id });
-        
-        res.status(201).json({ 
-            msg: "Usuario registrado exitosamente", 
-            user: { 
-                id: user.id, 
-                nombre: user.nombre, 
-                email: user.email, 
-                rol: user.rol 
-            } 
-        });
+        // Legacy response shape expected by tests: { msg, user }
+        const { message, user } = result.data || {};
+        return res.status(201).json({ msg: message, user });
     } catch (error) {
-        res.status(500).json({ error: "Error interno del servidor" });
+        return ApiResponse.error(res, 500, "Error registrando usuario");
     }
 }
 
 export async function login(req, res) {
     try {
-        const { email, password } = req.body;
+        const result = await AuthService.login(req.body);
 
-        if (!email || !password) {
-            return res.status(400).json({ error: "Email y contraseña son requeridos" });
+        if (result.error) {
+            return ApiResponse.error(res, 401, result.error.message);
         }
 
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            return res.status(400).json({ error: "Formato de email inválido" });
-        }
-
-        const user = await User.findOne({ where: { email } });
-        if (!user) {
-            return res.status(401).json({ error: "Credenciales inválidas" });
-        }
-
-        const ok = await bcryptjs.compare(password, user.password);
-        if (!ok) {
-            return res.status(401).json({ error: "Credenciales inválidas" });
-        }
-
-        if (!process.env.JWT_SECRET) {
-            return res.status(500).json({ error: "Error de configuración del servidor" });
-        }
-
-        const token = jwt.sign(
-            { id: user.id, email: user.email, rol: user.rol }, 
-            process.env.JWT_SECRET, 
-            { expiresIn: "8h" }
-        );
-        
-        res.json({ 
-            token, 
-            user: { 
-                id: user.id, 
-                nombre: user.nombre, 
-                email: user.email, 
-                rol: user.rol 
-            } 
-        });
+        // Legacy response shape expected by tests: { token, user }
+        const { token, user } = result.data || {};
+        return res.json({ token, user });
     } catch (error) {
-        res.status(500).json({ error: "Error interno del servidor" });
+        return ApiResponse.error(res, 500, "Error iniciando sesión");
+    }
+}
+
+export async function verifyToken(req, res) {
+    try {
+        const token = req.headers.authorization?.split(' ')[1];
+        
+        if (!token) {
+            return ApiResponse.error(res, 400, "Token no proporcionado");
+        }
+
+        const result = await AuthService.verifyToken(token);
+
+        if (result.error) {
+            return ApiResponse.error(res, 401, result.error.message);
+        }
+
+        return ApiResponse.success(res, result.data);
+    } catch (error) {
+        return ApiResponse.error(res, 500, "Error verificando token");
+    }
+}
+
+export async function refreshToken(req, res) {
+    try {
+        const result = await AuthService.refreshToken(req.user.id);
+
+        if (result.error) {
+            return ApiResponse.error(res, 404, result.error.message);
+        }
+
+        return ApiResponse.success(res, result.data);
+    } catch (error) {
+        return ApiResponse.error(res, 500, "Error refrescando token");
     }
 }
 
 export async function getProfile(req, res) {
     try {
-        const user = await User.findByPk(req.user.id, {
-            attributes: ['id', 'nombre', 'email', 'telefono', 'rol', 'creado_en']
-        });
-        
-        if (!user) {
-            return res.status(404).json({ error: "Usuario no encontrado" });
+        const result = await UserService.getUserById(req.user.id, false);
+
+        if (result.error) {
+            return ApiResponse.error(res, 404, result.error.message);
         }
-        
-        res.json({ user });
+
+        return ApiResponse.success(res, result.data);
     } catch (error) {
-        res.status(500).json({ error: "Error interno del servidor" });
+        return ApiResponse.error(res, 500, "Error obteniendo perfil");
     }
 }
 
 export async function updateProfile(req, res) {
     try {
-        const { nombre, email, telefono } = req.body;
-        const userId = req.user.id;
-        
-        const user = await User.findByPk(userId);
-        if (!user) {
-            return res.status(404).json({ error: "Usuario no encontrado" });
+        const { nombre, email } = req.body;
+        const result = await UserService.updateUser(req.user.id, { nombre, email });
+
+        if (result.error) {
+            return ApiResponse.error(res, 400, result.error.message);
         }
 
-        if (email && email !== user.email) {
-            const emailExists = await User.findOne({ where: { email } });
-            if (emailExists) {
-                return res.status(400).json({ error: "El email ya está en uso" });
-            }
-        }
-
-        if (nombre) user.nombre = nombre;
-        if (email) user.email = email;
-        if (telefono !== undefined) user.telefono = telefono;
-        
-        await user.save();
-        
-        res.json({ 
-            msg: "Perfil actualizado exitosamente",
-            user: {
-                id: user.id,
-                nombre: user.nombre,
-                email: user.email,
-                telefono: user.telefono,
-                rol: user.rol
-            }
-        });
+        return ApiResponse.success(res, result.data);
     } catch (error) {
-        res.status(500).json({ error: "Error interno del servidor" });
+        return ApiResponse.error(res, 500, "Error actualizando perfil");
     }
 }
 
 export async function changePassword(req, res) {
     try {
         const { currentPassword, newPassword } = req.body;
-        const userId = req.user.id;
-        
-        if (!currentPassword || !newPassword) {
-            return res.status(400).json({ error: "Contraseña actual y nueva son requeridas" });
-        }
-        
-        const user = await User.findByPk(userId);
-        if (!user) {
-            return res.status(404).json({ error: "Usuario no encontrado" });
+        const result = await UserService.changePassword(req.user.id, currentPassword, newPassword);
+
+        if (result.error) {
+            return ApiResponse.error(res, 400, result.error.message);
         }
 
-        const isValidPassword = await bcryptjs.compare(currentPassword, user.password);
-        if (!isValidPassword) {
-            return res.status(400).json({ error: "Contraseña actual incorrecta" });
-        }
-
-        const hash = await bcryptjs.hash(newPassword, 10);
-        user.password = hash;
-        await user.save();
-        
-        res.json({ msg: "Contraseña actualizada exitosamente" });
+        return ApiResponse.success(res, result.data);
     } catch (error) {
-        res.status(500).json({ error: "Error interno del servidor" });
+        return ApiResponse.error(res, 500, "Error cambiando contraseña");
     }
 }
 
 export async function deleteAccount(req, res) {
     try {
-        const { password } = req.body;
-        const userId = req.user.id;
-        
-        if (!password) {
-            return res.status(400).json({ error: "Contraseña es requerida para eliminar la cuenta" });
-        }
-        
-        const user = await User.findByPk(userId);
-        if (!user) {
-            return res.status(404).json({ error: "Usuario no encontrado" });
+        const result = await UserService.deleteUser(req.user.id);
+
+        if (result.error) {
+            return ApiResponse.error(res, 404, result.error.message);
         }
 
-        const isValidPassword = await bcryptjs.compare(password, user.password);
-        if (!isValidPassword) {
-            return res.status(400).json({ error: "Contraseña incorrecta" });
-        }
-
-        await user.destroy();
-        
-        res.json({ msg: "Cuenta eliminada exitosamente" });
+        return ApiResponse.success(res, { message: "Cuenta eliminada exitosamente" });
     } catch (error) {
-        res.status(500).json({ error: "Error interno del servidor" });
+        return ApiResponse.error(res, 500, "Error eliminando cuenta");
     }
 }

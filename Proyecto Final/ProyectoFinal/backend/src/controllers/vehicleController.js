@@ -1,123 +1,113 @@
-﻿import { Vehicle, Product, Fitment } from "../models/index.js";
-import { Op } from "sequelize";
+﻿import { VehicleService } from "../services/vehicleService.js";
+import { ApiResponse } from "../helpers/apiHelpers.js";
 
 export async function listVehicles(req, res) {
     try {
         const { page = 1, pageSize = 20, q, marca, modelo, año } = req.query;
-        const offset = (page - 1) * pageSize;
+        const result = await VehicleService.listVehicles({ q, marca, modelo, año }, { page, pageSize });
 
-        const filtros = {};
-        if (q) {
-            filtros[Op.or] = [
-                { marca: { [Op.like]: `%${q}%` } },
-                { modelo: { [Op.like]: `%${q}%` } }
-            ];
-        }
-        if (marca) filtros.marca = { [Op.like]: `%${marca}%` };
-        if (modelo) filtros.modelo = { [Op.like]: `%${modelo}%` };
-        if (año) {
-            const añoNum = parseInt(año);
-            filtros[Op.and] = [
-                { ano_desde: { [Op.lte]: añoNum } },
-                {
-                    [Op.or]: [
-                        { año_hasta: { [Op.gte]: añoNum } },
-                        { año_hasta: null }
-                    ]
-                }
-            ];
+        if (result.error) {
+            return ApiResponse.error(res, 400, result.error.message);
         }
 
-        const { rows, count } = await Vehicle.findAndCountAll({
-            where: filtros,
-            order: [['marca', 'ASC'], ['modelo', 'ASC'], ['año_desde', 'ASC']],
-            offset: parseInt(offset),
-            limit: parseInt(pageSize),
-        });
-
-        res.json({
-            data: rows,
-            pagination: {
-                page: +page,
-                pageSize: +pageSize,
-                total: count,
-                totalPages: Math.ceil(count / pageSize)
-            }
-        });
+        return ApiResponse.paginated(res, result.data, result.pagination);
     } catch (error) {
-        res.status(500).json({ error: "Error interno del servidor" });
+        return ApiResponse.error(res, 500, "Error listando vehículos");
     }
 }
 
 export async function getVehicle(req, res) {
     try {
-        const vehicle = await Vehicle.findByPk(req.params.id, {
-            include: [{
-                model: Product,
-                through: { attributes: [] },
-                attributes: ['id', 'sku', 'nombre', 'precio', 'stock']
-            }]
-        });
+        const result = await VehicleService.getVehicleById(req.params.id);
 
-        if (!vehicle) return res.status(404).json({ error: "Vehículo no encontrado" });
-        res.json(vehicle);
+        if (result.error) {
+            return ApiResponse.error(res, 404, result.error.message);
+        }
+
+        return ApiResponse.success(res, result.data);
     } catch (error) {
-        res.status(500).json({ error: "Error interno del servidor" });
+        return ApiResponse.error(res, 500, "Error obteniendo vehículo");
     }
 }
 
 export async function createVehicle(req, res) {
     try {
-        const { marca, modelo, año_desde, año_hasta, motor } = req.body;
+        const result = await VehicleService.createVehicle(req.body);
 
-        if (!marca || !modelo || !año_desde) {
-            return res.status(400).json({ 
-                error: "Marca, modelo y año desde son requeridos" 
-            });
+        if (result.error) {
+            return ApiResponse.error(res, 400, result.error.message);
         }
 
-        const vehicle = await Vehicle.create({ 
-            marca, 
-            modelo, 
-            año_desde, 
-            año_hasta, 
-            motor 
-        });
-        
-        res.status(201).json(vehicle);
+        return ApiResponse.success(res, result.data, 201);
     } catch (error) {
-        res.status(500).json({ error: "Error interno del servidor" });
+        return ApiResponse.error(res, 500, "Error creando vehículo");
     }
 }
 
 export async function updateVehicle(req, res) {
     try {
-        const vehicle = await Vehicle.findByPk(req.params.id);
-        if (!vehicle) return res.status(404).json({ error: "Vehículo no encontrado" });
+        const result = await VehicleService.updateVehicle(req.params.id, req.body);
 
-        await vehicle.update(req.body);
-        res.json(vehicle);
+        if (result.error) {
+            return ApiResponse.error(res, 404, result.error.message);
+        }
+
+        return ApiResponse.success(res, result.data);
     } catch (error) {
-        res.status(500).json({ error: "Error interno del servidor" });
+        return ApiResponse.error(res, 500, "Error actualizando vehículo");
     }
 }
 
 export async function deleteVehicle(req, res) {
     try {
-        const vehicle = await Vehicle.findByPk(req.params.id);
-        if (!vehicle) return res.status(404).json({ error: "Vehículo no encontrado" });
+        const result = await VehicleService.deleteVehicle(req.params.id);
 
-        await Fitment.destroy({ where: { vehicle_id: vehicle.id } });
-        
-        await vehicle.destroy();
-        res.json({ msg: "Vehículo eliminado exitosamente" });
+        if (result.error) {
+            const statusCode = result.error.code === 'VEHICLE_HAS_PRODUCTS' ? 400 : 404;
+            return ApiResponse.error(res, statusCode, result.error.message);
+        }
+
+        return ApiResponse.success(res, result.data);
     } catch (error) {
-        res.status(500).json({ error: "Error interno del servidor" });
+        return ApiResponse.error(res, 500, "Error eliminando vehículo");
+    }
+}
+
+export async function addProductToVehicle(req, res) {
+    try {
+        const { vehicleId, productId } = req.body;
+        const result = await VehicleService.addProductToVehicle(vehicleId, productId);
+
+        if (result.error) {
+            const statusCode = result.error.code === 'VEHICLE_NOT_FOUND' || result.error.code === 'PRODUCT_NOT_FOUND' ? 404 : 400;
+            return ApiResponse.error(res, statusCode, result.error.message);
+        }
+
+        return ApiResponse.success(res, result.data);
+    } catch (error) {
+        return ApiResponse.error(res, 500, "Error añadiendo producto");
+    }
+}
+
+export async function removeProductFromVehicle(req, res) {
+    try {
+        const { vehicleId, productId } = req.body;
+        const result = await VehicleService.removeProductFromVehicle(vehicleId, productId);
+
+        if (result.error) {
+            return ApiResponse.error(res, 404, result.error.message);
+        }
+
+        return ApiResponse.success(res, result.data);
+    } catch (error) {
+        return ApiResponse.error(res, 500, "Error removiendo producto");
     }
 }
 
 export async function getVehicleBrands(req, res) {
     try {
+        const { Vehicle } = await import("../models/index.js");
+        
         const brands = await Vehicle.findAll({
             attributes: ['marca'],
             group: ['marca'],
@@ -125,15 +115,16 @@ export async function getVehicleBrands(req, res) {
         });
 
         const brandList = brands.map(v => v.marca);
-        res.json(brandList);
+        return ApiResponse.success(res, brandList);
     } catch (error) {
-        res.status(500).json({ error: "Error interno del servidor" });
+        return ApiResponse.error(res, 500, "Error obteniendo marcas");
     }
 }
 
 export async function getVehicleModelsByBrand(req, res) {
     try {
         const { marca } = req.params;
+        const { Vehicle } = await import("../models/index.js");
         
         const models = await Vehicle.findAll({
             where: { marca },
@@ -143,8 +134,8 @@ export async function getVehicleModelsByBrand(req, res) {
         });
 
         const modelList = models.map(v => v.modelo);
-        res.json(modelList);
+        return ApiResponse.success(res, modelList);
     } catch (error) {
-        res.status(500).json({ error: "Error interno del servidor" });
+        return ApiResponse.error(res, 500, "Error obteniendo modelos");
     }
 }

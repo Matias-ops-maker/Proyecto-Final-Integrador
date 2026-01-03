@@ -1,122 +1,45 @@
-﻿import { User, Order } from "../models/index.js";
-import { Op } from "sequelize";
+﻿import { UserService } from "../services/userService.js";
+import { ApiResponse } from "../helpers/apiHelpers.js";
 import bcryptjs from "bcryptjs";
+import { User } from "../models/index.js";
 
 export async function listUsers(req, res) {
     try {
-
         if (req.user.rol !== "admin") {
-            return res.status(403).json({ error: "No autorizado" });
+            return ApiResponse.error(res, 403, "No autorizado");
         }
 
-        const { 
-            page = 1, 
-            pageSize = 20, 
-            q, 
-            rol 
-        } = req.query;
-        
-        const offset = (page - 1) * pageSize;
-        
-        const where = {};
-        if (q) {
-            where[Op.or] = [
-                { nombre: { [Op.like]: `%${q}%` } },
-                { email: { [Op.like]: `%${q}%` } }
-            ];
+        const { page = 1, pageSize = 20, q, rol } = req.query;
+        const result = await UserService.listUsers({ q, rol }, { page, pageSize });
+
+        if (result.error) {
+            return ApiResponse.error(res, 400, result.error.message);
         }
-        if (rol) where.rol = rol;
 
-        const { rows, count } = await User.findAndCountAll({
-            where,
-            attributes: ['id', 'nombre', 'email', 'rol', 'creado_en'],
-            order: [['creado_en', 'DESC']],
-            offset: parseInt(offset),
-            limit: parseInt(pageSize),
-        });
-
-        res.json({
-            data: rows,
-            pagination: {
-                page: +page,
-                pageSize: +pageSize,
-                total: count,
-                totalPages: Math.ceil(count / pageSize)
-            }
-        });
-
+        return ApiResponse.paginated(res, result.data, result.pagination);
     } catch (error) {
-        res.status(500).json({ error: "Error interno del servidor" });
+        return ApiResponse.error(res, 500, "Error listando usuarios");
     }
 }
+
 
 export async function getUser(req, res) {
     try {
         const { id } = req.params;
 
         if (req.user.rol !== "admin" && req.user.id != id) {
-            return res.status(403).json({ error: "No autorizado" });
+            return ApiResponse.error(res, 403, "No autorizado");
         }
 
-        const user = await User.findByPk(id, {
-            attributes: ['id', 'nombre', 'email', 'rol', 'creado_en'],
-            include: req.user.rol === "admin" ? [
-                {
-                    model: Order,
-                    attributes: ['id', 'total', 'estado', 'creado_en'],
-                    limit: 5,
-                    order: [['creado_en', 'DESC']]
-                }
-            ] : []
-        });
-
-        if (!user) {
-            return res.status(404).json({ error: "Usuario no encontrado" });
+        const result = await UserService.getUserById(id, req.user.rol === "admin");
+        
+        if (result.error) {
+            return ApiResponse.error(res, 404, result.error.message);
         }
 
-        res.json(user);
+        return ApiResponse.success(res, result.data);
     } catch (error) {
-        res.status(500).json({ error: "Error interno del servidor" });
-    }
-}
-
-export async function createUser(req, res) {
-    try {
-
-        if (req.user.rol !== "admin") {
-            return res.status(403).json({ error: "No autorizado" });
-        }
-
-        const { nombre, email, password, rol = 'user' } = req.body;
-
-        if (!nombre || !email || !password) {
-            return res.status(400).json({ error: "Todos los campos son requeridos" });
-        }
-
-        const existingUser = await User.findOne({ where: { email } });
-        if (existingUser) {
-            return res.status(400).json({ error: "El email ya está registrado" });
-        }
-
-        const hashedPassword = await bcryptjs.hash(password, 10);
-
-        const user = await User.create({
-            nombre,
-            email,
-            password: hashedPassword,
-            rol
-        });
-
-        res.status(201).json({
-            id: user.id,
-            nombre: user.nombre,
-            email: user.email,
-            rol: user.rol,
-            creado_en: user.creado_en
-        });
-
-    } catch (error) {
-        res.status(500).json({ error: "Error interno del servidor" });
+        return ApiResponse.error(res, 500, "Error obteniendo usuario");
     }
 }
 
@@ -126,19 +49,7 @@ export async function updateUser(req, res) {
         const { nombre, email, rol } = req.body;
 
         if (req.user.rol !== "admin" && req.user.id != id) {
-            return res.status(403).json({ error: "No autorizado" });
-        }
-
-        const user = await User.findByPk(id);
-        if (!user) {
-            return res.status(404).json({ error: "Usuario no encontrado" });
-        }
-
-        if (email && email !== user.email) {
-            const existingUser = await User.findOne({ where: { email } });
-            if (existingUser) {
-                return res.status(400).json({ error: "El email ya está en uso" });
-            }
+            return ApiResponse.error(res, 403, "No autorizado");
         }
 
         const updateData = { nombre, email };
@@ -146,18 +57,16 @@ export async function updateUser(req, res) {
             updateData.rol = rol;
         }
 
-        await user.update(updateData);
+        const result = await UserService.updateUser(id, updateData);
+        
+        if (result.error) {
+            const statusCode = result.error.code === 'EMAIL_EXISTS' ? 400 : 404;
+            return ApiResponse.error(res, statusCode, result.error.message);
+        }
 
-        res.json({
-            id: user.id,
-            nombre: user.nombre,
-            email: user.email,
-            rol: user.rol,
-            creado_en: user.creado_en
-        });
-
+        return ApiResponse.success(res, result.data);
     } catch (error) {
-        res.status(500).json({ error: "Error interno del servidor" });
+        return ApiResponse.error(res, 500, "Error actualizando usuario");
     }
 }
 
@@ -166,30 +75,95 @@ export async function deleteUser(req, res) {
         const { id } = req.params;
 
         if (req.user.rol !== "admin") {
-            return res.status(403).json({ error: "No autorizado" });
+            return ApiResponse.error(res, 403, "No autorizado");
         }
 
         if (req.user.id == id) {
-            return res.status(400).json({ error: "No puedes eliminar tu propio usuario" });
+            return ApiResponse.error(res, 400, "No puedes eliminar tu propio usuario");
         }
 
-        const user = await User.findByPk(id);
-        if (!user) {
-            return res.status(404).json({ error: "Usuario no encontrado" });
+        const result = await UserService.deleteUser(id);
+        
+        if (result.error) {
+            return ApiResponse.error(res, 404, result.error.message);
         }
 
-        const orderCount = await Order.count({ where: { user_id: id } });
-        if (orderCount > 0) {
-            return res.status(400).json({ 
-                error: "No se puede eliminar el usuario porque tiene órdenes asociadas" 
-            });
-        }
-
-        await user.destroy();
-        res.json({ msg: "Usuario eliminado exitosamente" });
-
+        return ApiResponse.success(res, result.data);
     } catch (error) {
-        res.status(500).json({ error: "Error interno del servidor" });
+        return ApiResponse.error(res, 500, "Error eliminando usuario");
+    }
+}
+
+export async function changePassword(req, res) {
+    try {
+        const { id } = req.params;
+        const { currentPassword, newPassword } = req.body;
+
+        if (req.user.id != id) {
+            return ApiResponse.error(res, 403, "No autorizado");
+        }
+
+        if (!currentPassword || !newPassword) {
+            return ApiResponse.error(res, 400, "Contraseña actual y nueva son requeridas");
+        }
+
+        const result = await UserService.changePassword(id, currentPassword, newPassword);
+        
+        if (result.error) {
+            return ApiResponse.error(res, 400, result.error.message);
+        }
+
+        return ApiResponse.success(res, result.data);
+    } catch (error) {
+        return ApiResponse.error(res, 500, "Error cambiando contraseña");
+    }
+}
+
+export async function getUserStats(req, res) {
+    try {
+        const { id } = req.params;
+
+        if (req.user.rol !== "admin" && req.user.id != id) {
+            return ApiResponse.error(res, 403, "No autorizado");
+        }
+
+        const result = await UserService.getUserStats(id);
+        
+        return ApiResponse.success(res, result.data);
+    } catch (error) {
+        return ApiResponse.error(res, 500, "Error obteniendo estadísticas");
+    }
+}
+
+export async function createUser(req, res) {
+    try {
+        const { nombre, email, password, rol = 'user' } = req.body;
+
+        if (!nombre || !email || !password) {
+            return ApiResponse.error(res, 400, "Todos los campos son requeridos");
+        }
+
+        const userExists = await User.findOne({ where: { email } });
+        if (userExists) {
+            return ApiResponse.error(res, 400, "Email ya registrado");
+        }
+
+        const hash = await bcryptjs.hash(password, 10);
+        const user = await User.create({
+            nombre,
+            email,
+            password: hash,
+            rol
+        });
+
+        return ApiResponse.success(res, {
+            id: user.id,
+            nombre: user.nombre,
+            email: user.email,
+            rol: user.rol
+        }, 201);
+    } catch (error) {
+        return ApiResponse.error(res, 500, "Error creando usuario");
     }
 }
 
@@ -198,26 +172,20 @@ export async function resetUserPassword(req, res) {
         const { id } = req.params;
         const { newPassword } = req.body;
 
-        if (req.user.rol !== "admin") {
-            return res.status(403).json({ error: "No autorizado" });
-        }
-
         if (!newPassword) {
-            return res.status(400).json({ error: "Nueva contraseña es requerida" });
+            return ApiResponse.error(res, 400, "Nueva contraseña es requerida");
         }
 
         const user = await User.findByPk(id);
         if (!user) {
-            return res.status(404).json({ error: "Usuario no encontrado" });
+            return ApiResponse.error(res, 404, "Usuario no encontrado");
         }
 
-        const hashedPassword = await bcryptjs.hash(newPassword, 10);
-        user.password = hashedPassword;
-        await user.save();
+        const hash = await bcryptjs.hash(newPassword, 10);
+        await user.update({ password: hash });
 
-        res.json({ msg: "Contraseña restablecida exitosamente" });
-
+        return ApiResponse.success(res, { message: "Contraseña restablecida exitosamente" });
     } catch (error) {
-        res.status(500).json({ error: "Error interno del servidor" });
+        return ApiResponse.error(res, 500, "Error restableciendo contraseña");
     }
 }
