@@ -1,5 +1,5 @@
 @echo off
-cd /d "C:\Users\Usuario\Downloads\Front-Back-borrador-TUP\Desktop\ProyectoFinal\backend"
+cd /d "%~dp0"
 echo Directorio actual: %CD%
 echo Verificando package.json del backend...
 if exist package.json (

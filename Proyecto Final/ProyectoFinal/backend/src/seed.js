@@ -1,4 +1,4 @@
-import dotenv from 'dotenv';
+﻿import dotenv from 'dotenv';
 dotenv.config();
 
 import {
@@ -12,6 +12,8 @@ import {
   Cart
 } from './models/index.js';
 import bcryptjs from 'bcryptjs';
+
+const defaultProductImage = 'https://images.unsplash.com/photo-1582719478248-54e9f2e7588c?auto=format&fit=crop&w=800&q=80';
 
 (async () => {
   try {
@@ -63,17 +65,17 @@ import bcryptjs from 'bcryptjs';
     const liquiMoly = await Brand.create({ nombre: 'Liqui Moly' });
 
     const vehicles = await Vehicle.bulkCreate([
-      { marca: 'Volkswagen', modelo: 'Golf', año_desde: 2010, año_hasta: 2020, motor: '1.6 TDI' },
-      { marca: 'Volkswagen', modelo: 'Polo', año_desde: 2015, año_hasta: null, motor: '1.0 TSI' },
-      { marca: 'Ford', modelo: 'Focus', año_desde: 2012, año_hasta: 2018, motor: '2.0 TDCi' },
-      { marca: 'Ford', modelo: 'Fiesta', año_desde: 2013, año_hasta: null, motor: '1.6 Ti-VCT' },
-      { marca: 'Chevrolet', modelo: 'Cruze', año_desde: 2011, año_hasta: 2019, motor: '1.8 LT' },
-      { marca: 'Toyota', modelo: 'Corolla', año_desde: 2014, año_hasta: null, motor: '1.8 Hybrid' },
-      { marca: 'Honda', modelo: 'Civic', año_desde: 2016, año_hasta: null, motor: '1.5 VTEC' },
-      { marca: 'Nissan', modelo: 'Sentra', año_desde: 2013, año_hasta: 2020, motor: '1.6 16V' }
+      { marca: 'Volkswagen', modelo: 'Golf', ano_desde: 2010, ano_hasta: 2020, motor: '1.6 TDI' },
+      { marca: 'Volkswagen', modelo: 'Polo', ano_desde: 2015, ano_hasta: null, motor: '1.0 TSI' },
+      { marca: 'Ford', modelo: 'Focus', ano_desde: 2012, ano_hasta: 2018, motor: '2.0 TDCi' },
+      { marca: 'Ford', modelo: 'Fiesta', ano_desde: 2013, ano_hasta: null, motor: '1.6 Ti-VCT' },
+      { marca: 'Chevrolet', modelo: 'Cruze', ano_desde: 2011, ano_hasta: 2019, motor: '1.8 LT' },
+      { marca: 'Toyota', modelo: 'Corolla', ano_desde: 2014, ano_hasta: null, motor: '1.8 Hybrid' },
+      { marca: 'Honda', modelo: 'Civic', ano_desde: 2016, ano_hasta: null, motor: '1.5 VTEC' },
+      { marca: 'Nissan', modelo: 'Sentra', ano_desde: 2013, ano_hasta: 2020, motor: '1.6 16V' }
     ]);
 
-    const products = await Product.bulkCreate([
+    const productsData = [
 
       {
         sku: 'F001',
@@ -126,7 +128,7 @@ import bcryptjs from 'bcryptjs';
       {
         sku: 'F005',
         nombre: 'Filtro Hydraulico HU7003X',
-        descripcion: 'Filtro hidráulico para transmisiones automáticas',
+          descripcion: 'Filtro hidráulico para transmisiones automáticas',
         precio: 4800.00,
         costo: 2880.00,
         imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto',
@@ -162,7 +164,7 @@ import bcryptjs from 'bcryptjs';
       {
         sku: 'F008',
         nombre: 'Filtro Aceite OX153D1',
-        descripcion: 'Filtro de aceite ecológico biodegradable',
+          descripcion: 'Filtro de aceite ecológico biodegradable',
         precio: 4100.00,
         costo: 2460.00,
         imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto',
@@ -175,7 +177,7 @@ import bcryptjs from 'bcryptjs';
       {
         sku: 'B001',
         nombre: 'Pastillas de Freno Delanteras Brembo',
-        descripcion: 'Pastillas de freno cerámicas para eje delantero',
+          descripcion: 'Pastillas de freno cerámicas para eje delantero',
         precio: 12000.00,
         costo: 7200.00,
         imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto',
@@ -187,7 +189,7 @@ import bcryptjs from 'bcryptjs';
       {
         sku: 'B002',
         nombre: 'Pastillas de Freno Traseras Ferodo',
-        descripcion: 'Pastillas de freno orgánicas para eje trasero',
+          descripcion: 'Pastillas de freno orgánicas para eje trasero',
         precio: 8500.00,
         costo: 5100.00,
         imagen_url: 'https://via.placeholder.com/200x150/9ca3af?text=Producto',
@@ -559,7 +561,12 @@ import bcryptjs from 'bcryptjs';
         brand_id: mahle.id,
         category_id: transmision.id
       }
-    ]);
+    ];
+
+    const products = await Product.bulkCreate(productsData.map(p => ({
+      ...p,
+      imagen_url: (!p.imagen_url || p.imagen_url.includes('placeholder')) ? defaultProductImage : p.imagen_url
+    })));
 
     const fitments = [
 
@@ -601,8 +608,9 @@ import bcryptjs from 'bcryptjs';
 
     process.exit(0);
   } catch (err) {
+    console.error(' Error en seed:', err?.message || err);
+    if (err?.stack) console.error(err.stack);
+    if (err?.errors) console.error(err.errors);
     process.exit(1);
   }
 })();
-
-

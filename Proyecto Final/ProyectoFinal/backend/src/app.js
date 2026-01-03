@@ -4,6 +4,8 @@ import dotenv from 'dotenv';
 dotenv.config();
 import { sequelize } from './models/index.js';
 import { checkApiKey } from './middlewares/apiKey.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 import authRoutes from './routes/auth.js';
 import productRoutes from './routes/products.js';
@@ -30,7 +32,8 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(checkApiKey);
+// Solo aplicar el middleware de API Key en rutas /api/*
+app.use('/api', checkApiKey);
 
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
@@ -57,8 +60,30 @@ app.use((error, req, res, _next) => {
   });
 });
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+// Servir archivos estáticos del frontend
+app.use(express.static(path.join(__dirname, '../../frontend/dist')));
+
+// Redirigir todas las rutas no API al index.html del frontend
+app.get(/^((?!\/api).)*$/, (req, res) => {
+  res.sendFile(path.join(__dirname, '../../frontend/dist/index.html'));
+});
+
+// Middleware de ruta no encontrada (al final)
 app.use((req, res) => {
   res.status(404).json({ error: 'Ruta no encontrada' });
+});
+
+// Endpoint temporal para depuración de productos y categorías (sin API Key)
+app.get('/debug/products-categories', async (req, res) => {
+  try {
+    const products = await sequelize.models.Product.findAll({ include: [sequelize.models.Category, sequelize.models.Brand] });
+    const categories = await sequelize.models.Category.findAll();
+    res.json({ products, categories });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
 const PORT = process.env.PORT || 4000;
