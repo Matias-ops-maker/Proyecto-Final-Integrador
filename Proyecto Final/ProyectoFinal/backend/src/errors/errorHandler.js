@@ -1,6 +1,6 @@
 import { AppError } from './AppError.js';
 
-export function errorHandler(err, req, res, next) {
+export function errorHandler(err, req, res, _next) {
   console.error('❌ Error capturado:', err);
 
   if (err instanceof AppError) {
