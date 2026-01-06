@@ -20,17 +20,21 @@ jobs:
           node-version: 18
 
       - name: Instalar dependencias
-        run: npm ci
-        working-directory: backend
+        run: |
+          cd "Proyecto Final/ProyectoFinal/backend"
+          npm ci
 
       - name: Ejecutar linter
-        run: npm run lint
-        working-directory: backend
+        run: |
+          cd "Proyecto Final/ProyectoFinal/backend"
+          npm run lint
 
       - name: Ejecutar tests
-        run: npm test
-        working-directory: backend
+        run: |
+          cd "Proyecto Final/ProyectoFinal/backend"
+          npm test
 
       - name: Build del proyecto
-        run: npm run build
-        working-directory: backend
+        run: |
+          cd "Proyecto Final/ProyectoFinal/backend"
+          npm run build
