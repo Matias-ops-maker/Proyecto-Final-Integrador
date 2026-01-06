@@ -18,6 +18,8 @@ import userRoutes from './routes/users.js';
 import reportRoutes from './routes/reports.js';
 import publicReportRoutes from './routes/publicReports.js';
 import paymentRoutes from './routes/payments.js';
+import { errorHandler } from './errors/errorHandler.js';
+import { AppError } from './errors/AppError.js';
 
 const app = express();
 
@@ -53,12 +55,6 @@ app.get('/health', (req, res) => res.json({
   env: process.env.NODE_ENV || 'development'
 }));
 
-app.use((error, req, res, _next) => {
-  res.status(500).json({
-    error: 'Error interno del servidor',
-    ...(process.env.NODE_ENV === 'development' && { details: error.message })
-  });
-});
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -70,21 +66,32 @@ app.get(/^((?!\/api).)*$/, (req, res) => {
   res.sendFile(path.join(__dirname, '../../frontend/dist/index.html'));
 });
 
-// Middleware de ruta no encontrada (al final)
-app.use((req, res) => {
-  res.status(404).json({ error: 'Ruta no encontrada' });
-});
-
 // Endpoint temporal para depuración de productos y categorías (sin API Key)
-app.get('/debug/products-categories', async (req, res) => {
+app.get('/debug/products-categories', async (req, res, next) => {
   try {
-    const products = await sequelize.models.Product.findAll({ include: [sequelize.models.Category, sequelize.models.Brand] });
+    const products = await sequelize.models.Product.findAll({
+      include: [sequelize.models.Category, sequelize.models.Brand]
+    });
     const categories = await sequelize.models.Category.findAll();
     res.json({ products, categories });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 });
+
+
+// Middleware de ruta no encontrada (al final)
+app.use((req, res, next) => {
+  next(new AppError({
+    code: 'NOT_FOUND',
+    statusCode: 404,
+    message: 'Ruta no encontrada'
+  }));
+});
+
+
+// Middleware global de manejo de errores
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 4000;
 

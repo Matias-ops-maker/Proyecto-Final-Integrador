@@ -1,5 +1,4 @@
 ﻿import ProductService from '../services/productService.js';
-import { validateCreateProduct, validateUpdateProduct } from '../services/validators/productValidator.js';
 
 export async function listProducts(req, res) {
   try {
@@ -32,32 +31,38 @@ export async function getProduct(req, res) {
 
 export async function createProduct(req, res) {
   try {
-    const { valid, errors } = validateCreateProduct(req.body);
-    if (!valid) return res.status(400).json({ errors });
-
     const newProduct = await ProductService.create(req.body);
     res.status(201).json(newProduct);
   } catch (error) {
-    if (error.code === 'SKU_EXISTS') return res.status(400).json({ error: 'El SKU ya existe' });
-    console.error('❌ Error en createProduct:', error);
+    if (error.code === 'SKU_EXISTS')
+      return res.status(400).json({ error: 'El SKU ya existe' });
+
+    if (error.code === 'VALIDATION_ERROR')
+      return res.status(400).json({ errors: error.details });
+
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 }
 
 export async function updateProduct(req, res) {
   try {
-    const { valid, errors } = validateUpdateProduct(req.body);
-    if (!valid) return res.status(400).json({ errors });
-
     const updated = await ProductService.update(req.params.id, req.body);
-    if (!updated) return res.status(404).json({ error: 'Producto no encontrado' });
+    if (!updated)
+      return res.status(404).json({ error: 'Producto no encontrado' });
+
     res.json(updated);
   } catch (error) {
-    if (error.code === 'SKU_EXISTS') return res.status(400).json({ error: 'El SKU ya existe' });
+    if (error.code === 'SKU_EXISTS')
+      return res.status(400).json({ error: 'El SKU ya existe' });
+
+    if (error.code === 'VALIDATION_ERROR')
+      return res.status(400).json({ errors: error.details });
+
     console.error('❌ Error en updateProduct:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 }
+
 
 export async function deleteProduct(req, res) {
   try {

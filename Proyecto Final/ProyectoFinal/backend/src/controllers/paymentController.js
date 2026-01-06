@@ -1,14 +1,37 @@
 ﻿import PaymentService from '../services/paymentService.js';
 import { validateCreatePayment } from '../services/validators/paymentValidator.js';
+import { AppError } from '../errors/AppError.js';
 
-export async function createPayment(req, res) {
+export async function createPayment(req, res, next) {
   try {
     const { valid, errors } = validateCreatePayment(req.body);
-    if (!valid) return res.status(400).json({ errors });
+    if (!valid) {
+      throw new AppError({
+        code: 'VALIDATION_ERROR',
+        statusCode: 400,
+        message: 'Datos de pago inválidos',
+        details: errors
+      });
+    }
 
-    const { items, payer, back_urls, external_reference, notification_url, metadata } = req.body;
-    const response = await PaymentService.createPayment(items, payer, back_urls, external_reference, notification_url, metadata);
-    
+    const {
+      items,
+      payer,
+      back_urls,
+      external_reference,
+      notification_url,
+      metadata
+    } = req.body;
+
+    const response = await PaymentService.createPayment(
+      items,
+      payer,
+      back_urls,
+      external_reference,
+      notification_url,
+      metadata
+    );
+
     res.json({
       success: true,
       preferenceId: response.id,
@@ -16,45 +39,31 @@ export async function createPayment(req, res) {
       sandbox_init_point: response.sandbox_init_point
     });
   } catch (error) {
-    if (error.code === 'NO_ITEMS') return res.status(400).json({ success: false, message: 'No hay items en el carrito' });
-    console.error('❌ Error en createPayment:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Error al crear la preferencia de pago',
-      error: error.message,
-      details: error.response?.data || null
-    });
+    next(error);
   }
 }
 
-export async function paymentWebhook(req, res) {
+export async function paymentWebhook(req, res, next) {
   try {
     const { type, data } = req.body;
     await PaymentService.handleWebhook(type, data);
     res.status(200).send('OK');
   } catch (error) {
-    console.error('❌ Error en paymentWebhook:', error);
-    res.status(500).send('Error');
+    next(error);
   }
 }
 
-export async function getPaymentStatus(req, res) {
+export async function getPaymentStatus(req, res, next) {
   try {
     const { paymentId } = req.params;
     res.json({
+      success: true,
       payment_id: paymentId,
       status: 'approved',
       amount: 1000,
       payment_method: 'credit_card'
     });
   } catch (error) {
-    console.error('❌ Error en getPaymentStatus:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Error al obtener el estado del pago'
-    });
+    next(error);
   }
 }
-
-
-

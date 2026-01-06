@@ -1,5 +1,9 @@
 import { Product, Category, Brand, Vehicle, Fitment } from '../models/index.js';
 import { Op } from 'sequelize';
+import {
+  validateCreateProduct,
+  validateUpdateProduct
+} from './validators/productValidator.js';
 
 export const ProductService = {
   async list(options = {}) {

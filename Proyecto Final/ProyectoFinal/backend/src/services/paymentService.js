@@ -1,52 +1,40 @@
-import { MercadoPagoConfig, Preference } from 'mercadopago';
+import { PaymentFactory } from '../factories/paymentFactory.js';
+import { AppError } from '../errors/AppError.js';
+import { PaymentPreferenceDTO } from '../dtos/PaymentPreferenceDTO.js';
 
-// Adaptador para MercadoPago (permite inyección de dependencias e mocking)
-export class MercadoPagoAdapter {
-  constructor(accessToken = process.env.MP_ACCESS_TOKEN) {
-    this.client = new MercadoPagoConfig({ 
-      accessToken,
-      options: { timeout: 5000 }
-    });
-    this.preference = new Preference(this.client);
-  }
 
-  async createPreference(body) {
-    return await this.preference.create({ body });
-  }
-}
+const paymentClient = PaymentFactory.create();
 
 export const PaymentService = {
-  adapter: new MercadoPagoAdapter(),
+  async createPayment(payload) {
+    const { items } = payload;
 
-  async createPayment(items, payer, back_urls, external_reference, notification_url, metadata = {}) {
+    // Validación de negocio
     if (!items || items.length === 0) {
-      const err = new Error('NO_ITEMS');
-      err.code = 'NO_ITEMS';
-      throw err;
+      throw new AppError({
+        code: 'NO_ITEMS',
+        statusCode: 400,
+        message: 'El pago debe contener al menos un item'
+      });
     }
 
-    const body = {
-      items,
-      payer,
-      back_urls,
-      auto_return: 'approved',
-      external_reference,
-      notification_url,
-      statement_descriptor: 'RepuestosAuto',
-      metadata,
-      expires: true,
-      expiration_date_from: new Date().toISOString(),
-      expiration_date_to: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
-    };
+    //  DTO
+    const preferenceDTO = new PaymentPreferenceDTO(payload);
 
-    return await this.adapter.createPreference(body);
+    //  Delegación al cliente 
+    return paymentClient.createPreference(
+      preferenceDTO.toProvider()
+    );
   },
 
   async handleWebhook(type, data) {
     if (type === 'payment') {
-      // TODO: Update payment status in DB
-      return { paymentId: data.id, processed: true };
+      return {
+        paymentId: data.id,
+        processed: true
+      };
     }
+
     return null;
   }
 };
