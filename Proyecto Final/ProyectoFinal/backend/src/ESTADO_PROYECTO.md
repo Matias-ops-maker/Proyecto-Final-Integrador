@@ -157,25 +157,38 @@ POST /api/payments/create
 
 ## 5. Automatización (estado)
 
-* [ ] Script `npm run validate` (pendiente)
-* [ ] Husky + lint-staged (pendiente)
-* [ ] GitHub Actions (opcional, pendiente)
+* ✅ Script `npm run validate` (lint + test)
+* ✅ Husky + lint-staged configurados (pre-commit hook)
+* ⏳ GitHub Actions (opcional, pendiente)
 
 ---
 
-## 6. Estado general de correcciones
+## 6. Documentación técnica
+
+Se creó **`ARCHITECTURE.md`** con:
+* Diagrama de capas
+* Decisiones clave de diseño
+* Flujos de pago y autenticación
+* Recomendaciones de buenas prácticas
+
+Ver: `Proyecto Final/ProyectoFinal/backend/ARCHITECTURE.md`
+
+---
+
+## 7. Estado general de correcciones
 
 * ✅ Service Layer
 * ✅ Factory
 * ✅ Adapter
 * ✅ DTO
 * ✅ Error Handler
-* ⏳ Automatización (pendiente)
-* ⏳ Diagramas formales (opcional)
+* ✅ Automatización (npm run validate, Husky)
+* ✅ Documentación arquitectónica
+* ⏳ GitHub Actions (opcional)
 
 ---
 
-## 7. Conclusión
+## 8. Conclusión
 
 El proyecto fue refactorizado siguiendo buenas prácticas de arquitectura backend, priorizando:
 
@@ -185,3 +198,8 @@ El proyecto fue refactorizado siguiendo buenas prácticas de arquitectura backen
 * Mantenibilidad
 
 Las decisiones tomadas permiten extender el sistema sin impacto en las capas superiores.
+
+### Documentación relacionada
+* **ARCHITECTURE.md**: resumen arquitectónico con diagramas y decisiones
+* **COMPLETION_REPORT.md**: reporte de finalización
+* **REFACTORING_GUIDE.md**: guía de refactoring y testing
