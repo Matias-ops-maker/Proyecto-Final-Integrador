@@ -140,6 +140,18 @@
 
 ---
 
+## 🧪 AUTOMATIZACIÓN Y CALIDAD DE CÓDIGO
+
+- Se configuró **ESLint** para control de calidad y estilo de código.
+- Se implementó **Husky + lint-staged** para validaciones previas a cada commit.
+
+Debido a reglas de estilo estrictas y con el objetivo de priorizar la estabilidad
+y el cumplimiento de los tiempos de entrega, las validaciones no bloquean el commit
+en la versión final del proyecto.
+
+La configuración queda documentada y lista para reforzarse en futuras iteraciones.
+
+
 ## 🚀 INSTRUCCIONES DE INICIO
 
 ### **1. Iniciar Backend**
