@@ -2,6 +2,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import '../../styles/catalogo.css';
 import UserNavbar from '../../components/UserNavbar.jsx';
+const DEFAULT_IMAGE = 'https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=600&q=80';
 
 export default function Carrito() {
   const [carrito, setCarrito] = useState([]);
@@ -142,11 +143,11 @@ export default function Carrito() {
                   <div key={item.id} className="carrito-item-detalle">
                     <div className="item-imagen">
                       <img
-                        src={item.imagen_url || item.image}
+                        src={item.imagen_url || item.image || DEFAULT_IMAGE}
                         alt={item.nombre || item.name}
                         onError={(e) => {
                           e.target.onerror = null;
-                          e.target.src = 'https://via.placeholder.com/150?text=Sin+imagen';
+                          e.target.src = DEFAULT_IMAGE;
                         }}
                       />
                     </div>

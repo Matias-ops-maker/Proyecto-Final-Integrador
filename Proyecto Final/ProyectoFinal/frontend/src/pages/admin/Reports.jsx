@@ -1,6 +1,7 @@
 ﻿import React from "react";
 import { useNavigate } from "react-router-dom";
 import "../../styles/usuario.css";
+import { API_URL } from "../../api";
 
 export default function Reports() {
     const navigate = useNavigate();
@@ -13,7 +14,11 @@ export default function Reports() {
                 return;
             }
 
-            const res = await fetch(`http://localhost:4000/api/reports/${type === 'pdf' ? 'pdf' : 'xlsx'}`, {
+            const endpoint = type === 'pdf'
+                ? `${API_URL}/reports/sales/pdf`
+                : `${API_URL}/reports/sales/xlsx`;
+
+            const res = await fetch(endpoint, {
                 headers: { 
                     "x-api-key": "mi_api_key_super_secreta",
                     "Authorization": `Bearer ${token}`

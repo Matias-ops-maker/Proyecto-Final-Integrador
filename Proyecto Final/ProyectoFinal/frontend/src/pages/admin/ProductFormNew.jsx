@@ -1,6 +1,7 @@
 ﻿import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "../../api.js";
+const DEFAULT_IMAGE = 'https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=600&q=80';
 
 export default function ProductFormNew() {
   const [formData, setFormData] = useState({
@@ -23,11 +24,16 @@ export default function ProductFormNew() {
   const { id } = useParams();
   const isEdit = Boolean(id);
 
+  const normalizeList = (payload) => {
+    const collection = payload?.data ?? payload;
+    return Array.isArray(collection) ? collection : [];
+  };
+
   useEffect(() => {
     const loadData = async () => {
       try {
         const catResponse = await api.get("/categories");
-        setCategories(catResponse.data || []);
+        setCategories(normalizeList(catResponse.data));
       } catch {
         setCategories([
           { id: 1, nombre: "Filtros" },
@@ -38,7 +44,7 @@ export default function ProductFormNew() {
 
       try {
         const brandResponse = await api.get("/brands");
-        setBrands(brandResponse.data || []);
+        setBrands(normalizeList(brandResponse.data));
       } catch {
         setBrands([
           { id: 1, nombre: "Bosch" },
@@ -201,10 +207,10 @@ export default function ProductFormNew() {
         </div>
       </form>
 
-      {formData.imagen_url && (
+      {(formData.imagen_url || DEFAULT_IMAGE) && (
         <div style={{ marginTop: "30px", maxWidth: "400px" }}>
           <h3>Vista previa de imagen</h3>
-          <img src={formData.imagen_url} alt="Vista previa" onError={(e) => { e.target.style.display = "none"; }} style={{ maxWidth: "100%", height: "auto", border: "1px solid #d1d5db", borderRadius: "4px" }} />
+          <img src={formData.imagen_url || DEFAULT_IMAGE} alt="Vista previa" onError={(e) => { e.target.src = DEFAULT_IMAGE; }} style={{ maxWidth: "100%", height: "auto", border: "1px solid #d1d5db", borderRadius: "4px" }} />
         </div>
       )}
     </div>

@@ -5,6 +5,7 @@ import '../../styles/catalogo.css';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
 const API_KEY = import.meta.env.VITE_API_KEY || 'mi_api_key_super_secreta';
+const DEFAULT_IMAGE = 'https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=600&q=80';
 
 export default function ProductoDetalle() {
   const { id } = useParams();
@@ -135,10 +136,10 @@ export default function ProductoDetalle() {
         <div className="producto-detalle-content">
           <div className="producto-imagen-detalle">
             <img
-              src={producto.imagen_url || 'https://via.placeholder.com/400x300/9ca3af?text=Sin+Imagen'}
+              src={producto.imagen_url || DEFAULT_IMAGE}
               alt={producto.nombre}
               onError={(e) => {
-                e.target.src = 'https://via.placeholder.com/400x300/9ca3af?text=Error+Imagen';
+                e.target.src = DEFAULT_IMAGE;
               }}
               style={{
                 maxWidth: '100%',

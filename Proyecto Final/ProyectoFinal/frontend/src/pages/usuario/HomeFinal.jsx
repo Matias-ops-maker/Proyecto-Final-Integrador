@@ -6,6 +6,7 @@ import UserNavbar from "../../components/UserNavbar.jsx";
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
 const API_KEY = import.meta.env.VITE_API_KEY || 'mi_api_key_super_secreta';
+const DEFAULT_IMAGE = 'https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=600&q=80';
 
 export default function HomeFinal() {
   const [productos, setProductos] = useState([]);
@@ -44,7 +45,7 @@ export default function HomeFinal() {
           price: parseFloat(producto.precio),
           stock: producto.stock,
           category: producto.Category?.nombre || 'Sin categoría',
-          image: producto.imagen_url || 'https://via.placeholder.com/200x150/9ca3af?text=Sin+Imagen',
+          image: producto.imagen_url || DEFAULT_IMAGE,
         }));
 
         setProductos(productosFormateados);
@@ -251,10 +252,10 @@ export default function HomeFinal() {
                 style={{ cursor: 'pointer' }}
               >
                 <img
-                  src={producto.image}
+                  src={producto.image || DEFAULT_IMAGE}
                   alt={producto.name}
                   onError={(e) => {
-                    e.target.src = 'https://via.placeholder.com/200x150/9ca3af?text=Error';
+                    e.target.src = DEFAULT_IMAGE;
                   }}
                 />
                 {producto.stock < 100 && (

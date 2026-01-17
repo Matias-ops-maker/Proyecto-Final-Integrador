@@ -2,6 +2,7 @@
 import { useNavigate } from "react-router-dom";
 import api from "../../api.js";
 import "../../styles/usuario.css";
+const DEFAULT_IMAGE = 'https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=600&q=80';
 
 export default function Products() {
     const [products, setProducts] = useState([]);
@@ -197,11 +198,11 @@ export default function Products() {
                                 <tr key={product.id} className="product-row">
                                     <td className="image-cell">
                                         <img 
-                                            src={product.imagen_url || 'https://via.placeholder.com/50x50/9ca3af?text=Sin+Imagen'}
+                                            src={product.imagen_url || DEFAULT_IMAGE}
                                             alt={product.nombre}
                                             className="product-image"
                                             onError={(e) => {
-                                                e.target.src = 'https://via.placeholder.com/50x50/9ca3af?text=Error';
+                                                e.target.src = DEFAULT_IMAGE;
                                             }}
                                         />
                                     </td>
